@@ -58,32 +58,35 @@ public class Risk  {
     //rolls dice for each player and returns the player number of the winner
     public static int chooseFirstPlayer(int numPlayers, ArrayList<Player> players){
         int max=0;
-        int startingNum=0;
+        ArrayList<Integer> startingNum = new ArrayList<>();
         
         
         for(int i=0; i<numPlayers;i++){
             int temp=(int)(Math.random()*6)+1;
             System.out.println(players.get(i).getName()+" rolled a "+temp);
-            
-            //if there is a tie choose which player wins the tie with a 50/50 chance
-            if(temp==max&&i>0){
-                int tie=(int)(Math.random()*2);
-                if(tie==0){
-                    System.out.println(players.get(i).getName()+" won the tie over "+ players.get(startingNum).getName());
-                    startingNum=i;
-                }
-                else{
-                    System.out.println(players.get(startingNum).getName()+" won the tie over "+ players.get(i).getName());
-                }
-            }
-            
             if(temp>max){
                 max=temp;
-                startingNum=i;
+                startingNum.clear();
+                startingNum.add(i);
+            }
+            
+            else if(temp==max){
+                startingNum.add(i);
             }
         }
-
-        return startingNum;
+        if(startingNum.size()>1){
+            ArrayList<Player> ties=new ArrayList<>();
+            for(int x=0; x<startingNum.size();x++){
+                ties.add(players.get(startingNum.get(x)));
+                System.out.print(players.get(startingNum.get(x)).getName()+" | ");
+            }
+            System.out.println("tied and will reroll");
+            int tempNum= chooseFirstPlayer(ties.size(),ties);
+            tempNum=startingNum.get(tempNum);
+            startingNum.clear();
+            startingNum.add(tempNum);
+        }
+        return startingNum.get(0);
     }
     
     public static void claiming(ArrayList<Player> players, ArrayList<territory> territories, int playerNum ){
