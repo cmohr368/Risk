@@ -8,13 +8,16 @@ class territory {
     boolean occupied;
     int armies;
     String continent;
+    String name;
     int playerNum;
     
     
-    territory(){
+    territory(String name, String continent){
         armies=0;
         neighbors = new ArrayList<>();
         occupied=false;
+        this.name=name;
+        this.continent=continent;
     }
         
     public void addArmy(){
@@ -74,6 +77,14 @@ class territory {
     
     public int getPlayerNum(){
         return playerNum;
+    }
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }
