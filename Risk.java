@@ -97,28 +97,27 @@ public class Risk  {
             System.out.println("\n"+players.get(playerNum).getName()+" place an army: (armies left "+players.get(playerNum).unplacedArmies()+")");
             int territoryNum=sc.nextInt();
             
-            if(claimed!=42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
-                while(claimed!=42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+            if(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+                while(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                     if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                         System.out.println("Territory is already claimed by other player, please choose a different territory");
                     }
-                    else if(claimed!=42&&territories.get(territoryNum).isOccupied()){
+                    else if(claimed<42&&territories.get(territoryNum).isOccupied()){
                         System.out.println("All territories must be claimed before re-enforements can be add, please choose a different territory");
                     }
                     territoryNum=sc.nextInt();
                 }
             }
-            else{
-                claimed++;
-                territories.get(territoryNum).addArmy();
-                players.get(playerNum).placeArmy();
             
-                if(!territories.get(territoryNum).isOccupied()){
-                    territories.get(territoryNum).occupy();
-                    territories.get(territoryNum).setPlayerNum(playerNum);
-                    players.get(playerNum).addTerritory(territories.get(territoryNum));
+            claimed++;
+            territories.get(territoryNum).addArmy();
+            players.get(playerNum).placeArmy();
+            
+            if(!territories.get(territoryNum).isOccupied()){
+                territories.get(territoryNum).occupy();
+                territories.get(territoryNum).setPlayerNum(playerNum);
+                players.get(playerNum).addTerritory(territories.get(territoryNum));
                 
-                }
             }
             playerNum++;
             
