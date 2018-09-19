@@ -26,10 +26,6 @@ public class Risk  {
                 
         System.out.println("\n"+players.get(startingNum).getName()+" will start");
         claiming(players, territories, startingNum);
-        
-        while(!gameOver){
-            
-        }
     }
     
     public static ArrayList<Player> createPlayers(int numPlayers){
@@ -144,6 +140,31 @@ public class Risk  {
                 }
                 i++;
             }while(i<territories.size()&&continent==territories.get(i).getContinent());
+        }
+    }
+    
+    public static void reEnforce(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
+        
+        Scanner sc = new Scanner(System.in);
+        int armies=(p1.territories.size())/3;
+        if(armies<3){armies=3;}
+        if(p1.northCount==9){armies+=5;}
+        if(p1.southCount==4){armies+=2;}
+        if(p1.europeCount==7){armies+=5;}
+        if(p1.africaCount==6){armies+=3;}
+        if(p1.asiaCount==12){armies+=7;}
+        if(p1.australiaCount==4){armies+=2;}
+        
+        printTerritories(players, territories);
+        System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
+        for(int i=0;i<armies;i++){
+            int territoryNum=sc.nextInt();
+            if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+                while(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+                    System.out.println("Territory is already claimed by other player, please choose a different territory");
+                }
+            }
+            territories.get(territoryNum).addArmy();
         }
     }
     
