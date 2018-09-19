@@ -26,6 +26,10 @@ public class Risk  {
                 
         System.out.println("\n"+players.get(startingNum).getName()+" will start");
         claiming(players, territories, startingNum);
+        
+        while(!gameOver){
+            
+        }
     }
     
     public static ArrayList<Player> createPlayers(int numPlayers){
@@ -87,28 +91,35 @@ public class Risk  {
     
     public static void claiming(ArrayList<Player> players, ArrayList<territory> territories, int playerNum ){
         Scanner sc = new Scanner(System.in);
+        int claimed=0;
         while(players.get(playerNum).unplacedArmies()!=0){
             printTerritories(players, territories);
             System.out.println("\n"+players.get(playerNum).getName()+" place an army: (armies left "+players.get(playerNum).unplacedArmies()+")");
             int territoryNum=sc.nextInt();
             
-            if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
-                while(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
-                    System.out.println("Territory is already claimed by other player, please choose a different territory");
+            if(claimed!=42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+                while(claimed!=42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+                    if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+                        System.out.println("Territory is already claimed by other player, please choose a different territory");
+                    }
+                    else if(claimed!=42&&territories.get(territoryNum).isOccupied()){
+                        System.out.println("All territories must be claimed before re-enforements can be add, please choose a different territory");
+                    }
                     territoryNum=sc.nextInt();
                 }
             }
+            else{
+                claimed++;
+                territories.get(territoryNum).addArmy();
+                players.get(playerNum).placeArmy();
             
-            territories.get(territoryNum).addArmy();
-            players.get(playerNum).placeArmy();
-            
-            if(!territories.get(territoryNum).isOccupied()){
-                territories.get(territoryNum).occupy();
-                territories.get(territoryNum).setPlayerNum(playerNum);
-                players.get(playerNum).addTerritory(territories.get(territoryNum));
+                if(!territories.get(territoryNum).isOccupied()){
+                    territories.get(territoryNum).occupy();
+                    territories.get(territoryNum).setPlayerNum(playerNum);
+                    players.get(playerNum).addTerritory(territories.get(territoryNum));
                 
+                }
             }
-            
             playerNum++;
             
             if(playerNum==players.size()){
