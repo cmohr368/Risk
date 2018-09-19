@@ -92,5 +92,4 @@ class Player {
     public ArrayList<territory> getTerritories() {
         return territories;
     }
-    
 }

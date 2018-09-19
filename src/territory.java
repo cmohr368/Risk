@@ -86,5 +86,4 @@ class territory {
     public String getName() {
         return name;
     }
-
 }

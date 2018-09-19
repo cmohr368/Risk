@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-
-
 public class Risk  {
     public static void main(String[] args) {
         int numPlayers;
@@ -25,6 +23,7 @@ public class Risk  {
         int startingNum=chooseFirstPlayer(numPlayers, players);
                 
         System.out.println("\n"+players.get(startingNum).getName()+" will start");
+        
         claiming(players, territories, startingNum);
     }
     
@@ -144,7 +143,6 @@ public class Risk  {
     }
     
     public static void reEnforce(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
-        
         Scanner sc = new Scanner(System.in);
         int armies=(p1.territories.size())/3;
         if(armies<3){armies=3;}
@@ -154,6 +152,32 @@ public class Risk  {
         if(p1.africaCount==6){armies+=3;}
         if(p1.asiaCount==12){armies+=7;}
         if(p1.australiaCount==4){armies+=2;}
+        
+        System.out.println("Infantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
+        
+        if(p1.infantryCount==3){
+            System.out.println("Would you like to redeem your infantry cards?(y/n)");
+            String answer= sc.nextLine();
+            if(answer=="y"){
+                armies+=3;
+            }
+        }
+        
+        if(p1.cavalryCount==3){
+            System.out.println("Would you like to redeem your cavalry cards?(y/n)");
+            String answer= sc.nextLine();
+            if(answer=="y"){
+                armies+=15;
+            }
+        }
+        
+        if(p1.artilleryCount==3){
+            System.out.println("Would you like to redeem your artillery cards?(y/n)");
+            String answer= sc.nextLine();
+            if(answer=="y"){
+                armies+=30;
+            }
+        }
         
         printTerritories(players, territories);
         System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
