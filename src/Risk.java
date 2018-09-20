@@ -51,7 +51,44 @@ public class Risk  {
         System.out.println(players.get(playerTurn)+" WINS!!!");
         
     }
-    
+
+    public static ArrayList shuffleDeck(){
+        int deckSize= 42;
+
+        ArrayList<Integer> deck= new ArrayList<>();
+
+        for(int i= 0; i<deckSize; i++){
+            if(i<20){
+                deck.add(1);
+            } else if(i>19 && i<35){
+                deck.add(2);
+            } else if(i>34 && i<42){
+                deck.add(3);
+            }
+        }
+        Collections.shuffle(deck);
+        return deck;
+    }
+
+    public static int getCard(ArrayList<Integer> list){
+
+//        ArrayList<Integer> intDeck= new ArrayList<>();
+//        intDeck= list;
+        for(int i= 0; i<42; i++) {
+            if(list.get(i)== 1){
+                list.remove(i);
+                return 1;
+            } else if(list.get(i)== 2){
+                list.remove(i);
+                return 2;
+            } else if(list.get(i)== 3){
+                list.remove(i);
+                return 3;
+            }
+        }
+        return 0; //Error when called and has to return 0?
+    }
+
     public static ArrayList<Player> createPlayers(int numPlayers){
         Scanner sc = new Scanner(System.in);
         
