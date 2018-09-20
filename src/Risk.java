@@ -19,14 +19,22 @@ public class Risk  {
         System.out.println("How many players?");
         numPlayers=sc.nextInt();
         
+        sc.nextLine();
+        
         ArrayList<Player> players = createPlayers(numPlayers);
         
         
         int startingNum=chooseFirstPlayer(numPlayers, players);
                 
         System.out.println("\n"+players.get(startingNum).getName()+" will start");
-        
-        claiming(players, territories, startingNum);
+        System.out.println("\nWould you like to auto assign the territories?(y/n)");
+        String answer= sc.nextLine();
+        if(answer.equals("y")){
+            random(players, territories, startingNum);
+        }
+        else{
+            claiming(players, territories, startingNum);
+        }
         
         int playerTurn=startingNum;
         
@@ -146,6 +154,44 @@ public class Risk  {
         return startingNum.get(0);
     }
     
+    //works only for player groups of 2, 3, and 4 for now because 42 is only divisible by those
+    public static void random(ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
+        int count=0;
+        int numTerritories=0;
+        if(players.size()==2){
+            numTerritories=21;
+        }
+        else if(players.size()==3){
+            numTerritories=14;
+        }
+        else if(players.size()==6){
+            numTerritories=7;
+        }
+        for(int i=0;i<players.size();i++){
+            for(int x=count;x<numTerritories+count;x++){
+                territories.get(x).addArmy();
+                players.get(i).addTerritory(territories.get(x));
+                players.get(i).placeArmy();
+                territories.get(x).occupy();
+                territories.get(x).setPlayerNum(i);
+            }
+            count+=numTerritories;
+        }
+        
+        for(int i=0;i<players.size();i++){
+            int counter=0;
+            while(players.get(i).unPlacedArmies!=0){
+                players.get(i).territories.get(counter).addArmy();
+                players.get(i).placeArmy();
+                counter++;
+                if(players.get(i).territories.size()==counter){
+                    counter=0;
+                }
+            }
+        }
+        
+    }
+    
     public static void claiming(ArrayList<Player> players, ArrayList<territory> territories, int playerNum ){
         Scanner sc = new Scanner(System.in);
         int claimed=0;
@@ -222,6 +268,7 @@ public class Risk  {
         System.out.println("\nInfantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
         
         if(p1.infantryCount>2){
+            sc.nextLine();
             System.out.println("\nWould you like to redeem your infantry cards?(y/n)");
             String answer= sc.nextLine();
             if(answer=="y"){
@@ -231,6 +278,7 @@ public class Risk  {
         }
         
         if(p1.cavalryCount>2){
+            sc.nextLine();
             System.out.println("\nWould you like to redeem your cavalry cards?(y/n)");
             String answer= sc.nextLine();
             if(answer=="y"){
@@ -240,6 +288,7 @@ public class Risk  {
         }
         
         if(p1.artilleryCount>2){
+            sc.nextLine();
             System.out.println("\nWould you like to redeem your artillery cards?(y/n)");
             String answer= sc.nextLine();
             if(answer=="y"){
