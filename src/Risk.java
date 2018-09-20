@@ -25,13 +25,29 @@ public class Risk  {
         System.out.println("\n"+players.get(startingNum).getName()+" will start");
         
         claiming(players, territories, startingNum);
+        
+        int playerTurn=startingNum;
+        
+        
+        
+        while(!gameOver){
+            
+            reEnforce(players.get(playerTurn),players, territories, playerTurn);
+            
+            attack(players.get(playerTurn), players, territories, playerTurn);
+            /*
+            fortify
+            */
+            playerTurn++;
+        }
+        
     }
     
     public static ArrayList<Player> createPlayers(int numPlayers){
         Scanner sc = new Scanner(System.in);
         
         int startingArmies=0;
-        if(numPlayers==2){startingArmies=40;}
+        if(numPlayers==2){startingArmies=30;}
         if(numPlayers==3){startingArmies=35;}
         if(numPlayers==4){startingArmies=30;}
         if(numPlayers==5){startingArmies=25;}
@@ -153,6 +169,8 @@ public class Risk  {
         if(p1.asiaCount==12){armies+=7;}
         if(p1.australiaCount==4){armies+=2;}
         
+        printTerritories(players, territories);
+        
         System.out.println("Infantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
         
         if(p1.infantryCount==3){
@@ -178,21 +196,55 @@ public class Risk  {
                 armies+=30;
             }
         }
-        
-        printTerritories(players, territories);
         System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
         for(int i=0;i<armies;i++){
             int territoryNum=sc.nextInt();
             if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                 while(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                     System.out.println("Territory is already claimed by other player, please choose a different territory");
+                    territoryNum=sc.nextInt();
                 }
             }
             territories.get(territoryNum).addArmy();
         }
     }
     
-    public static void attack(Player p1, Player p2, territory t1, territory t2, int numArmies, int num2Armies){
+    public static void attack(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
+        printTerritories(players, territories);
+        
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nWould you like to attack this turn?(y/n)");
+        String answer= sc.nextLine();
+        while(answer.equals("y")){
+            System.out.println("\nChoose territory to attack with");
+            int territoryNum= sc.nextInt();
+            if(territories.get(territoryNum).getPlayerNum()!=playerNum){
+                while(territories.get(territoryNum).getPlayerNum()!=playerNum){
+                    System.out.println("\nPlease choose your own territory");
+                    territoryNum= sc.nextInt();
+                }
+            }
+            System.out.println("\nChoose territory to attack");
+            int attackNum= sc.nextInt();
+            if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))){
+                while(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))){
+                    System.out.println("\nYou can not reach that territory, choose another");
+                    attackNum= sc.nextInt();
+                }
+            }
+            
+            attacking(players.get(playerNum), players.get(territories.get(attackNum).getPlayerNum()), territories.get(territoryNum),territories.get(attackNum), territories.get(territoryNum).numArmies(), territories.get(attackNum).numArmies());
+            printTerritories(players,territories);
+            System.out.println("\nWould you like to attack again?(y/n)");
+            sc.nextLine();
+            answer= sc.nextLine();
+            
+        }
+    }
+    
+    public static void attacking(Player p1, Player p2, territory t1, territory t2, int numArmies, int num2Armies){
+        Scanner sc = new Scanner(System.in);
+        
         ArrayList<Integer> t1Num= new ArrayList<>();
         ArrayList<Integer> t2Num= new ArrayList<>();
         
@@ -200,24 +252,63 @@ public class Risk  {
         int t2Deaths=0;
         
         boolean t1Wins=false;
-        boolean t2Wins=false;
         
-        t1Num=t1.attack(numArmies);
-        t2Num=t2.defend(num2Armies);
-        System.out.print(p1.getName()+" rolled | ");
-        for(int one=0;one<t1Num.size();one++){
-            System.out.print(t1Num.get(one)+" | ");
+        if(t1.numArmies()>3){
+            System.out.println("\nHow many armies would you like to attack with?(max 3)");
         }
-        System.out.println();
+        else{
+            System.out.println("\nHow many armies would you like to attack with?(max "+(t1.numArmies()-1)+")");
+        }
+        int attackArmies= sc.nextInt();
+        if(attackArmies>3&&attackArmies>(t1.numArmies()-1)){
+            while(attackArmies>3&&attackArmies>(t1.numArmies()-1)){
+                if(t1.numArmies()>3){
+                    System.out.println("\nEnter 3 or less");
+                }
+                else{
+                    System.out.println("\nEnter a number less then "+(t1.numArmies()));
+                }
+                attackArmies= sc.nextInt();
+            }
+        }
+        int defendArmies;
+        if(t2.numArmies()>1){
+            System.out.println("\n"+p2.getName()+" how many armies would you like to defend with?(max 2)");
+            defendArmies= sc.nextInt();
+            if(defendArmies>2){
+                while(defendArmies>2){
+                    System.out.println("\n"+p2.getName()+" enter 2 or less");
+                    defendArmies= sc.nextInt();
+                }
+            }
+        }
+        else{
+            System.out.println("\n"+p2.getName()+" you can defend with only one army");
+            defendArmies=1;
+        }
         
-        System.out.print(p2.getName()+" rolled | ");
-        for(int two=0;two<t2Num.size();two++){
-            System.out.print(t1Num.get(two)+" | ");
-        }
-        System.out.println();
+        
+        
+        t1Num=t1.attack(attackArmies);
+        t2Num=t2.defend(defendArmies);
+        
         
         Collections.sort(t1Num);
         Collections.sort(t2Num);
+        Collections.reverse(t1Num);
+        Collections.reverse(t2Num);
+        
+        System.out.print(p1.getName()+" rolled | ");
+        
+        for(int x=0;x<t1Num.size();x++){
+            System.out.print(t1Num.get(x)+" | ");
+        }
+        
+        System.out.print("\n"+p2.getName()+" rolled | ");
+        
+        for(int y=0;y<t2Num.size();y++){
+            System.out.print(t2Num.get(y)+" | ");
+        }
         
         int numBattles;
         if(t1Num.size()<t2Num.size()){
@@ -227,36 +318,30 @@ public class Risk  {
             numBattles=t2Num.size();
         }
         
+        
+        
         for(int i=0;i<numBattles;i++){
             if(t1Num.get(i)>t2Num.get(i)){
                t2Deaths++; 
             }
-            if(t2Num.get(i)>t1Num.get(i)){
+            else{
                t1Deaths++;
             }
         }
+        System.out.println("\n"+p1.getName()+" lost "+t1Deaths+" armies");
+        System.out.println(p2.getName()+" lost "+t2Deaths+" armies");
         
-        if(t1Num.size()==t1Deaths){
-            t2Wins=true;
-        }
-        else if(t2Num.size()==t2Deaths){
+        if(t2.numArmies()==t2Deaths){
             t1Wins=true;
         }
-        
         
         t1.deleteArmy(t1Deaths);
         t2.deleteArmy(t2Deaths);
         
-        if(t2Wins){
-            System.out.println(p2.getName()+" succesffully defended their territory!");
-        }
-        else if(t1Wins){
+        if(t1Wins){
             p1.addTerritory(t2);
             p2.looseTerritory(t2);
             System.out.println(p2.getName()+" won the battle and gained the territory!");
-        }
-        else{
-            attack(p1, p2, t1, t2, t1Num.size(), t2Num.size());
         }
     }
     
