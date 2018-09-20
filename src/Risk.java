@@ -362,6 +362,8 @@ public class Risk  {
     }
     
     public static void fortify(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
+        ArrayList<Integer> movedTo= new ArrayList<>();
+        
         Scanner sc = new Scanner(System.in);
         System.out.println("\n"+p1.getName()+" you may now fortify you territories");
         System.out.println("Would you like to move any armies?(y/n)");
@@ -376,6 +378,13 @@ public class Risk  {
                     territoryNum= sc.nextInt();
                 }
             }
+            if(movedTo.contains(territoryNum)){
+                while(movedTo.contains(territoryNum)){
+                    System.out.println("\nYou cannot move troops from a territory you already moved troops too, enter another number");
+                    territoryNum= sc.nextInt();
+                }
+            }
+                
             System.out.println("\nChoose territory to move them too");
             int territory2Num= sc.nextInt();
             if(!territories.get(territoryNum).isNeighbor(territories.get(territory2Num))&&territories.get(territoryNum).getPlayerNum()!=playerNum){
@@ -389,6 +398,8 @@ public class Risk  {
                     territory2Num= sc.nextInt();
                 }
             }
+            movedTo.add(territory2Num);
+            
             System.out.println("\nHow many troops would you like to move?");
             int troops= sc.nextInt();
             if(!(troops<territories.get(territoryNum).numArmies())){
