@@ -9,6 +9,8 @@ public class Risk  {
         int numPlayers;
         boolean gameOver=false;
         
+        ArrayList<Integer> deck = shuffleDeck();
+        
         ArrayList<territory> territories = new ArrayList<>();
         
         createTerritories(territories);
@@ -34,7 +36,7 @@ public class Risk  {
             
             reEnforce(players.get(playerTurn),players, territories, playerTurn);
             
-            attack(players.get(playerTurn), players, territories, playerTurn);
+            attack(players.get(playerTurn), players, territories, playerTurn, deck);
             
             if(players.get(playerTurn).territories.size()==42){
                 gameOver=true;
@@ -51,8 +53,8 @@ public class Risk  {
         System.out.println(players.get(playerTurn)+" WINS!!!");
         
     }
-
-    public static ArrayList shuffleDeck(){
+    
+    public static ArrayList<Integer> shuffleDeck(){
         int deckSize= 42;
 
         ArrayList<Integer> deck= new ArrayList<>();
@@ -75,15 +77,18 @@ public class Risk  {
         if(list.get(0)== 1){
             list.remove(0);
             return 1;
-        } else if(list.get(0)== 2){
+        } 
+        else if(list.get(0)== 2){
             list.remove(0);
             return 2;
-        } else (list.get(0)== 3){
+        } 
+        else{
             list.remove(0);
             return 3;
         }
     }
 
+    
     public static ArrayList<Player> createPlayers(int numPlayers){
         Scanner sc = new Scanner(System.in);
         
@@ -250,7 +255,7 @@ public class Risk  {
         }
     }
     
-    public static void attack(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
+    public static void attack(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum, ArrayList<Integer> deck){
         printTerritories(players, territories);
         
         Scanner sc = new Scanner(System.in);
@@ -281,7 +286,7 @@ public class Risk  {
                 }
             }
             
-            attacking(players.get(playerNum), players.get(territories.get(attackNum).getPlayerNum()), territories.get(territoryNum),territories.get(attackNum), territories.get(territoryNum).numArmies(), territories.get(attackNum).numArmies());
+            attacking(players.get(playerNum), players.get(territories.get(attackNum).getPlayerNum()), territories.get(territoryNum),territories.get(attackNum), territories.get(territoryNum).numArmies(), territories.get(attackNum).numArmies(), deck);
             printTerritories(players,territories);
             System.out.println("\nWould you like to attack again?(y/n)");
             sc.nextLine();
@@ -290,7 +295,7 @@ public class Risk  {
         }
     }
     
-    public static void attacking(Player p1, Player p2, territory t1, territory t2, int numArmies, int num2Armies){
+    public static void attacking(Player p1, Player p2, territory t1, territory t2, int numArmies, int num2Armies, ArrayList<Integer> deck){
         Scanner sc = new Scanner(System.in);
         
         ArrayList<Integer> t1Num= new ArrayList<>();
@@ -390,6 +395,8 @@ public class Risk  {
             p1.addTerritory(t2);
             p2.looseTerritory(t2);
             System.out.println(p2.getName()+" won the battle and gained the territory!");
+            int card=getCard(deck);
+            p1.addCard(card);
         }
     }
     

@@ -39,6 +39,12 @@ class Player {
         return name;
     }
     
+    public void addCard(int card){
+        if(card==1){infantryCount++;}
+        else if(card==2){cavalryCount++;}
+        else{artilleryCount++;}
+    }
+    
     public void addTerritory(territory a){
         territories.add(a);
         if(a.continent=="North America"){
