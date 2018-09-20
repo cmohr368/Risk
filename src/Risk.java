@@ -14,7 +14,7 @@ public class Risk  {
         ArrayList<territory> territories = new ArrayList<>();
         
         createTerritories(territories);
-        
+        System.out.println("WELCOME TO RISK");
         Scanner sc = new Scanner(System.in);
         System.out.println("How many players?");
         numPlayers=sc.nextInt();
