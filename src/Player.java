@@ -98,4 +98,16 @@ class Player {
     public ArrayList<territory> getTerritories() {
         return territories;
     }
+
+    void useCavalry() {
+        cavalryCount-=3;
+    }
+
+    void useArtillery() {
+        cavalryCount-=3;
+    }
+
+    void useInfantry() {
+        cavalryCount-=3;
+    }
 }

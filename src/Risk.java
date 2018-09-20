@@ -50,7 +50,7 @@ public class Risk  {
             }
             
         }
-        System.out.println(players.get(playerTurn)+" WINS!!!");
+        System.out.println(players.get(playerTurn).getName()+" WINS!!!");
         
     }
     
@@ -219,31 +219,36 @@ public class Risk  {
         
         printTerritories(players, territories);
         
-        System.out.println("Infantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
+        System.out.println("\nInfantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
         
-        if(p1.infantryCount==3){
-            System.out.println("Would you like to redeem your infantry cards?(y/n)");
+        if(p1.infantryCount>2){
+            System.out.println("\nWould you like to redeem your infantry cards?(y/n)");
             String answer= sc.nextLine();
             if(answer=="y"){
                 armies+=3;
+                p1.useInfantry();
             }
         }
         
-        if(p1.cavalryCount==3){
-            System.out.println("Would you like to redeem your cavalry cards?(y/n)");
+        if(p1.cavalryCount>2){
+            System.out.println("\nWould you like to redeem your cavalry cards?(y/n)");
             String answer= sc.nextLine();
             if(answer=="y"){
                 armies+=15;
+                p1.useCavalry();
             }
         }
         
-        if(p1.artilleryCount==3){
-            System.out.println("Would you like to redeem your artillery cards?(y/n)");
+        if(p1.artilleryCount>2){
+            System.out.println("\nWould you like to redeem your artillery cards?(y/n)");
             String answer= sc.nextLine();
             if(answer=="y"){
                 armies+=30;
+                p1.useArtillery();
             }
         }
+        
+        //add ability to send more then 1 army
         System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
         for(int i=0;i<armies;i++){
             int territoryNum=sc.nextInt();
@@ -288,7 +293,7 @@ public class Risk  {
                 }
             }
             
-            attacking(players.get(playerNum), players.get(territories.get(attackNum).getPlayerNum()), territories.get(territoryNum),territories.get(attackNum), territories.get(territoryNum).numArmies(), territories.get(attackNum).numArmies(), deck);
+            attacking(players.get(playerNum), players.get(territories.get(attackNum).getPlayerNum()), territories.get(territoryNum),territories.get(attackNum), territories.get(territoryNum).numArmies(), territories.get(attackNum).numArmies(), deck, playerNum);
             printTerritories(players,territories);
             System.out.println("\nWould you like to attack again?(y/n)");
             sc.nextLine();
@@ -297,7 +302,7 @@ public class Risk  {
         }
     }
     
-    public static void attacking(Player p1, Player p2, territory t1, territory t2, int numArmies, int num2Armies, ArrayList<Integer> deck){
+    public static void attacking(Player p1, Player p2, territory t1, territory t2, int numArmies, int num2Armies, ArrayList<Integer> deck, int playerNum){
         Scanner sc = new Scanner(System.in);
         
         ArrayList<Integer> t1Num= new ArrayList<>();
@@ -394,10 +399,32 @@ public class Risk  {
         t2.deleteArmy(t2Deaths);
         
         if(t1Wins){
+            System.out.println(p1.getName()+" won the battle and gained the territory!");
+            System.out.println("How many armies would you like to send to "+t2.getName()+"(max "+(t1.armies-1)+")");
+            int armiesMoving= sc.nextInt();
+            if(armiesMoving>t1.armies-1){
+                while(armiesMoving>t1.armies-1){
+                    System.out.println("\nYou can enter a max of "+(t1.armies-1)+" troops, try again");
+                    armiesMoving= sc.nextInt();
+                }
+            }
+            moveTroops(armiesMoving,t1,t2);
+            t2.setPlayerNum(playerNum);
             p1.addTerritory(t2);
             p2.looseTerritory(t2);
-            System.out.println(p2.getName()+" won the battle and gained the territory!");
+            
             int card=getCard(deck);
+            if(card==1){
+                System.out.println("\n"+p1.getName()+" gained an infantry card");
+            }
+        
+            if(card==2){
+                System.out.println("\n"+p1.getName()+" gained an cavalry card");
+            }
+        
+            if(card==3){
+                System.out.println("\n"+p1.getName()+" gained an artillery card");
+            }
             p1.addCard(card);
         }
     }
