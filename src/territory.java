@@ -23,6 +23,11 @@ class territory {
     public void addArmy(){
         armies++;
     }
+    
+    public void addArmies(int x){
+        armies+=x;
+    }
+    
     public void deleteArmy(int a){
         armies-=a;
         

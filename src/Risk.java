@@ -35,11 +35,20 @@ public class Risk  {
             reEnforce(players.get(playerTurn),players, territories, playerTurn);
             
             attack(players.get(playerTurn), players, territories, playerTurn);
-            /*
-            fortify
-            */
-            playerTurn++;
+            
+            if(players.get(playerTurn).territories.size()==42){
+                gameOver=true;
+            }
+            else{
+                fortify(players.get(playerTurn), players, territories, playerTurn);
+                playerTurn++;
+                if(playerTurn==numPlayers){
+                    playerTurn=0;
+                }
+            }
+            
         }
+        System.out.println(players.get(playerTurn)+" WINS!!!");
         
     }
     
@@ -224,11 +233,18 @@ public class Risk  {
                     territoryNum= sc.nextInt();
                 }
             }
+            
+            //add cant attack your own territory
             System.out.println("\nChoose territory to attack");
             int attackNum= sc.nextInt();
-            if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))){
-                while(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))){
-                    System.out.println("\nYou can not reach that territory, choose another");
+            if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))&&territories.get(territoryNum).getPlayerNum()==playerNum){
+                while(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))&&territories.get(territoryNum).getPlayerNum()==playerNum){
+                    if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))){
+                        System.out.println("\nYou can not reach that territory, choose another");
+                    }
+                    else if(territories.get(territoryNum).getPlayerNum()==playerNum){
+                        System.out.println("\nYou can't attack your own territory, choose another");
+                    }
                     attackNum= sc.nextInt();
                 }
             }
@@ -343,6 +359,54 @@ public class Risk  {
             p2.looseTerritory(t2);
             System.out.println(p2.getName()+" won the battle and gained the territory!");
         }
+    }
+    
+    public static void fortify(Player p1, ArrayList<Player> players, ArrayList<territory> territories, int playerNum){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n"+p1.getName()+" you may now fortify you territories");
+        System.out.println("Would you like to move any armies?(y/n)");
+        String answer= sc.nextLine();
+        
+        while(answer.equals("y")){
+            System.out.println("\nChoose territory to move troops from");
+            int territoryNum= sc.nextInt();
+            if(territories.get(territoryNum).getPlayerNum()!=playerNum){
+                while(territories.get(territoryNum).getPlayerNum()!=playerNum){
+                    System.out.println("\nPlease choose your own territory");
+                    territoryNum= sc.nextInt();
+                }
+            }
+            System.out.println("\nChoose territory to move them too");
+            int territory2Num= sc.nextInt();
+            if(!territories.get(territoryNum).isNeighbor(territories.get(territory2Num))&&territories.get(territoryNum).getPlayerNum()!=playerNum){
+                while(!territories.get(territoryNum).isNeighbor(territories.get(territory2Num))&&territories.get(territoryNum).getPlayerNum()!=playerNum){
+                    if(!territories.get(territoryNum).isNeighbor(territories.get(territory2Num))){
+                        System.out.println("\nYou can not reach that territory, choose another");
+                    }
+                    else if(territories.get(territoryNum).getPlayerNum()!=playerNum){
+                        System.out.println("\nYou must move them to a territory you own, choose another");
+                    }
+                    territory2Num= sc.nextInt();
+                }
+            }
+            System.out.println("\nHow many troops would you like to move?");
+            int troops= sc.nextInt();
+            if(!(troops<territories.get(territoryNum).numArmies())){
+                while(!(troops<territories.get(territoryNum).numArmies())){
+                    System.out.println("\nYou do not have enough troops to do that, enter another number");
+                    troops= sc.nextInt();
+                }
+            }
+            moveTroops(troops, territories.get(territoryNum), territories.get(territory2Num));
+            sc.nextLine();
+            System.out.println("\nWould you like to move more troops?(y/n)");
+            answer= sc.nextLine();
+        }
+    }
+    
+    public static void moveTroops(int troops, territory location1, territory location2){
+        location1.deleteArmy(troops);
+        location2.addArmies(troops);
     }
     
     public static ArrayList<territory> createTerritories(ArrayList<territory> territories){
