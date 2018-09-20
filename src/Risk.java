@@ -47,7 +47,7 @@ public class Risk  {
         Scanner sc = new Scanner(System.in);
         
         int startingArmies=0;
-        if(numPlayers==2){startingArmies=30;}
+        if(numPlayers==2){startingArmies=40;}
         if(numPlayers==3){startingArmies=35;}
         if(numPlayers==4){startingArmies=30;}
         if(numPlayers==5){startingArmies=25;}
