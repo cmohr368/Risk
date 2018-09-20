@@ -154,6 +154,8 @@ public class Risk  {
             System.out.println("\n"+players.get(playerNum).getName()+" place an army: (armies left "+players.get(playerNum).unplacedArmies()+")");
             int territoryNum=sc.nextInt();
             
+            //add if number is greater then 41 and if its not a number
+            
             if(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                 while(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                     if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
@@ -274,12 +276,12 @@ public class Risk  {
             //add cant attack your own territory
             System.out.println("\nChoose territory to attack");
             int attackNum= sc.nextInt();
-            if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))&&territories.get(territoryNum).getPlayerNum()==playerNum){
-                while(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))&&territories.get(territoryNum).getPlayerNum()==playerNum){
+            if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))||territories.get(attackNum).getPlayerNum()==playerNum){
+                while(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))||territories.get(attackNum).getPlayerNum()==playerNum){
                     if(!territories.get(territoryNum).isNeighbor(territories.get(attackNum))){
                         System.out.println("\nYou can not reach that territory, choose another");
                     }
-                    else if(territories.get(territoryNum).getPlayerNum()==playerNum){
+                    else if(territories.get(attackNum).getPlayerNum()==playerNum){
                         System.out.println("\nYou can't attack your own territory, choose another");
                     }
                     attackNum= sc.nextInt();
