@@ -2,10 +2,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-public class TeePrintStream extends PrintStream {
+
+public class FilePrintStream extends PrintStream {
     private final PrintStream second;
 
-    public TeePrintStream(OutputStream main, PrintStream second) {
+    public FilePrintStream(OutputStream main, PrintStream second) {
         super(main);
         this.second = second;
     }
