@@ -1,4 +1,3 @@
-// Checking Travis CI
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -195,6 +194,8 @@ public class Risk  {
     public static void claiming(ArrayList<Player> players, ArrayList<territory> territories, int playerNum ){
         Scanner sc = new Scanner(System.in);
         int claimed=0;
+
+
         while(players.get(playerNum).unplacedArmies()!=0){
             printTerritories(players, territories);
             System.out.println("\n"+players.get(playerNum).getName()+" place an army: (armies left "+players.get(playerNum).unplacedArmies()+")");
@@ -202,32 +203,37 @@ public class Risk  {
             
             //add if number is greater then 41 and if its not a number
             
-            if(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
-                while(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
-                    if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
+            if(claimed<42&&territories.get(territoryNum).isOccupied()||territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)) {
+                while (claimed < 42 && territories.get(territoryNum).isOccupied() || territories.get(territoryNum).isOccupied() && !(territories.get(territoryNum).getPlayerNum() == playerNum)) {
+                    if (territories.get(territoryNum).isOccupied() && !(territories.get(territoryNum).getPlayerNum() == playerNum)) {
                         System.out.println("Territory is already claimed by other player, please choose a different territory");
-                    }
-                    else if(claimed<42&&territories.get(territoryNum).isOccupied()){
+                    } else if (claimed < 42 && territories.get(territoryNum).isOccupied()) {
                         System.out.println("All territories must be claimed before re-enforements can be add, please choose a different territory");
                     }
-                    territoryNum=sc.nextInt();
+                    territoryNum = sc.nextInt();
                 }
             }
-            
-            claimed++;
-            territories.get(territoryNum).addArmy();
-            players.get(playerNum).placeArmy();
-            
-            if(!territories.get(territoryNum).isOccupied()){
-                territories.get(territoryNum).occupy();
-                territories.get(territoryNum).setPlayerNum(playerNum);
-                players.get(playerNum).addTerritory(territories.get(territoryNum));
-                
-            }
-            playerNum++;
-            
-            if(playerNum==players.size()){
-                playerNum=0;
+
+            sc.nextLine();
+            System.out.println("\nWould you like to undo your move?(y/n)");
+            String undo=sc.nextLine();
+            if(!(undo.equals("y"))){
+
+                claimed++;
+                territories.get(territoryNum).addArmy();
+                players.get(playerNum).placeArmy();
+
+                if (!territories.get(territoryNum).isOccupied()) {
+                    territories.get(territoryNum).occupy();
+                    territories.get(territoryNum).setPlayerNum(playerNum);
+                    players.get(playerNum).addTerritory(territories.get(territoryNum));
+
+                }
+                playerNum++;
+
+                if (playerNum == players.size()) {
+                    playerNum = 0;
+                }
             }
          }
     }
@@ -271,7 +277,7 @@ public class Risk  {
             sc.nextLine();
             System.out.println("\nWould you like to redeem your infantry cards?(y/n)");
             String answer= sc.nextLine();
-            if(answer=="y"){
+            if(answer.equals("y")){
                 armies+=3;
                 p1.useInfantry();
             }
@@ -281,7 +287,7 @@ public class Risk  {
             sc.nextLine();
             System.out.println("\nWould you like to redeem your cavalry cards?(y/n)");
             String answer= sc.nextLine();
-            if(answer=="y"){
+            if(answer.equals("y")){
                 armies+=15;
                 p1.useCavalry();
             }
@@ -291,23 +297,46 @@ public class Risk  {
             sc.nextLine();
             System.out.println("\nWould you like to redeem your artillery cards?(y/n)");
             String answer= sc.nextLine();
-            if(answer=="y"){
+            if(answer.equals("y")){
                 armies+=30;
                 p1.useArtillery();
             }
         }
-        
+
         //add ability to send more then 1 army
         System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
         for(int i=0;i<armies;i++){
+            System.out.println("\nChoose a territory to place armies on ("+(armies-i)+" left)");
             int territoryNum=sc.nextInt();
             if(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
                 while(territories.get(territoryNum).isOccupied()&&!(territories.get(territoryNum).getPlayerNum()==playerNum)){
-                    System.out.println("Territory is already claimed by other player, please choose a different territory");
+                    System.out.println("\nTerritory is already claimed by other player, please choose a different territory");
                     territoryNum=sc.nextInt();
                 }
             }
-            territories.get(territoryNum).addArmy();
+            System.out.println("\nHow many armies would you like to add (max "+(armies-i)+")");
+            int numArmies=sc.nextInt();
+            if(numArmies>armies-i){
+                while(numArmies>armies-i){
+                    System.out.println("\nChoose a number less then "+(armies-i));
+                    numArmies=sc.nextInt();
+                }
+            }
+
+
+            territories.get(territoryNum).addArmies(numArmies);
+            printTerritories(players, territories);
+
+            sc.nextLine();
+            System.out.println("\nWould you like to undo your move?(y/n)");
+            String undo=sc.nextLine();
+            if(undo.equals("y")) {
+                territories.get(territoryNum).deleteArmy(numArmies);
+                i--;
+            }
+            else{
+                i+=numArmies;
+            }
         }
     }
     
@@ -443,38 +472,44 @@ public class Risk  {
         if(t2.numArmies()==t2Deaths){
             t1Wins=true;
         }
-        
-        t1.deleteArmy(t1Deaths);
-        t2.deleteArmy(t2Deaths);
-        
-        if(t1Wins){
-            System.out.println(p1.getName()+" won the battle and gained the territory!");
-            System.out.println("How many armies would you like to send to "+t2.getName()+"(max "+(t1.armies-1)+")");
-            int armiesMoving= sc.nextInt();
-            if(armiesMoving>t1.armies-1){
-                while(armiesMoving>t1.armies-1){
-                    System.out.println("\nYou can enter a max of "+(t1.armies-1)+" troops, try again");
-                    armiesMoving= sc.nextInt();
+
+        sc.nextLine();
+        System.out.println("\nWould you like to undo your move?(y/n)");
+        String undo=sc.nextLine();
+        if(!(undo.equals("y"))) {
+
+            t1.deleteArmy(t1Deaths);
+            t2.deleteArmy(t2Deaths);
+
+            if (t1Wins) {
+                System.out.println(p1.getName() + " won the battle and gained the territory!");
+                System.out.println("How many armies would you like to send to " + t2.getName() + "(max " + (t1.armies - 1) + ")");
+                int armiesMoving = sc.nextInt();
+                if (armiesMoving > t1.armies - 1) {
+                    while (armiesMoving > t1.armies - 1) {
+                        System.out.println("\nYou can enter a max of " + (t1.armies - 1) + " troops, try again");
+                        armiesMoving = sc.nextInt();
+                    }
                 }
+                moveTroops(armiesMoving, t1, t2);
+                t2.setPlayerNum(playerNum);
+                p1.addTerritory(t2);
+                p2.looseTerritory(t2);
+
+                int card = getCard(deck);
+                if (card == 1) {
+                    System.out.println("\n" + p1.getName() + " gained an infantry card");
+                }
+
+                if (card == 2) {
+                    System.out.println("\n" + p1.getName() + " gained an cavalry card");
+                }
+
+                if (card == 3) {
+                    System.out.println("\n" + p1.getName() + " gained an artillery card");
+                }
+                p1.addCard(card);
             }
-            moveTroops(armiesMoving,t1,t2);
-            t2.setPlayerNum(playerNum);
-            p1.addTerritory(t2);
-            p2.looseTerritory(t2);
-            
-            int card=getCard(deck);
-            if(card==1){
-                System.out.println("\n"+p1.getName()+" gained an infantry card");
-            }
-        
-            if(card==2){
-                System.out.println("\n"+p1.getName()+" gained an cavalry card");
-            }
-        
-            if(card==3){
-                System.out.println("\n"+p1.getName()+" gained an artillery card");
-            }
-            p1.addCard(card);
         }
     }
     
@@ -526,7 +561,15 @@ public class Risk  {
                 }
             }
             moveTroops(troops, territories.get(territoryNum), territories.get(territory2Num));
+            printTerritories(players, territories);
             sc.nextLine();
+            System.out.println("\nWould you like to undo your move?(y/n)");
+            String undo=sc.nextLine();
+            if(undo.equals("y")) {
+                moveTroops(troops, territories.get(territory2Num), territories.get(territoryNum));
+                printTerritories(players, territories);
+            }
+
             System.out.println("\nWould you like to move more troops?(y/n)");
             answer= sc.nextLine();
         }
