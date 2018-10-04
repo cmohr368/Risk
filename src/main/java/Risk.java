@@ -1,33 +1,56 @@
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.AmazonServiceException;
+import java.io.File;
 
 public class Risk  {
     public static void main(String[] args) {
-        int numPlayers;
-        boolean gameOver=false;
-        
-        ArrayList<Integer> deck = shuffleDeck();
-        
-        ArrayList<territory> territories = new ArrayList<>();
-        
-        createTerritories(territories);
-        System.out.println("WELCOME TO RISK");
-        Scanner sc = new Scanner(System.in);
-        System.out.println("How many players?");
-        numPlayers=sc.nextInt();
-        
-        sc.nextLine();
-        
-        ArrayList<Player> players = createPlayers(numPlayers);
-        
-        
-        int startingNum=chooseFirstPlayer(numPlayers, players);
-                
-        System.out.println("\n"+players.get(startingNum).getName()+" will start");
-        System.out.println("\nWould you like to auto assign the territories?(y/n)");
-        String answer= sc.nextLine();
+
+        try {
+            File file = new File("output.txt");
+            FileOutputStream fileOutput = new FileOutputStream("output.txt");
+            FilePrintStream tee = new FilePrintStream(fileOutput, System.out);
+            System.setOut(tee);
+            int numPlayers;
+            boolean gameOver = false;
+
+            ArrayList<Integer> deck = shuffleDeck();
+
+            ArrayList<territory> territories = new ArrayList<>();
+
+            createTerritories(territories);
+            System.out.println("WELCOME TO RISK");
+            Scanner sc = new Scanner(System.in);
+            System.out.println("How many players?");
+            numPlayers = sc.nextInt();
+
+            sc.nextLine();
+
+            ArrayList<Player> players = createPlayers(numPlayers);
+
+
+            int startingNum = chooseFirstPlayer(numPlayers, players);
+
+            System.out.println("\n" + players.get(startingNum).getName() + " will start");
+            System.out.println("\nWould you like to auto assign the territories?(y/n)");
+
+            tee.close();
+
+            final AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
+
+            try{
+                s3.putObject("riskprojectreplay","Risk Game Replay",file);
+            }catch(AmazonServiceException e){
+                System.err.println(e.getErrorMessage());
+                System.exit(1);
+            }
+
+        /*String answer= sc.nextLine();
         if(answer.equals("y")){
             random(players, territories, startingNum);
         }
@@ -58,6 +81,24 @@ public class Risk  {
             
         }
         System.out.println(players.get(playerTurn).getName()+" WINS!!!");
+        tee.close();
+
+        final AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
+
+        try{
+            s3.putObject("riskprojectreplay","Risk Game Replay",file);
+        }catch(AmazonServiceException e){
+            System.err.println(e.getErrorMessage());
+            System.exit(1);
+        }
+
+        }*/
+        }
+        catch(IOException e1){
+            System.out.println("Error during reading/writing");
+        }
+
+
         
     }
     
