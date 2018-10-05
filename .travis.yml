@@ -1,12 +1,13 @@
 language: java
 
-jdk: oraclejdk8
+jdk:
+  - oraclejdk8
 
 install: true
 
 script:
 - mvn -f pom.xml test
--"mvn -f pom.xml cobertura:cobertura"
+- "mvn -f pom.xml cobertura:cobertura"
 
 after_success:
-- bash <(curl -s https://codecov.io/bash) -t 5b385a9a-6ac2-49c3-a089-9761a1571a07
+- bash <(curl -s https://codecov.io/bash)
