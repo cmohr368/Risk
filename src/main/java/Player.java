@@ -63,7 +63,7 @@ class Player {
         }
         if(a.continent=="Australia"){   
             australiaCount++;
-        }  
+        }
     }
     public void looseTerritory(territory a){
         territories.remove(a);
