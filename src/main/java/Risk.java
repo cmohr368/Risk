@@ -4,19 +4,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.AmazonServiceException;
-import java.io.File;
 
 public class Risk  {
     public static void main(String[] args) {
 
         try {
-            File file = new File("output.txt");
-            FileOutputStream fileOutput = new FileOutputStream("output.txt");
-            FilePrintStream tee = new FilePrintStream(fileOutput, System.out);
-            System.setOut(tee);
+            Replay ree = new Replay();
+            Logger log = new Logger();
+
             int numPlayers;
             boolean gameOver = false;
 
@@ -40,18 +35,9 @@ public class Risk  {
             System.out.println("\n" + players.get(startingNum).getName() + " will start");
             System.out.println("\nWould you like to auto assign the territories?(y/n)");
 
-            tee.close();
 
-            final AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
 
-            try{
-                s3.putObject("riskprojectreplay","Risk Game Replay",file);
-            }catch(AmazonServiceException e){
-                System.err.println(e.getErrorMessage());
-                System.exit(1);
-            }
-
-        /*String answer= sc.nextLine();
+        String answer= sc.nextLine();
         if(answer.equals("y")){
             random(players, territories, startingNum);
         }
@@ -82,24 +68,15 @@ public class Risk  {
             
         }
         System.out.println(players.get(playerTurn).getName()+" WINS!!!");
-        tee.close();
 
-        final AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
-
-        try{
-            s3.putObject("riskprojectreplay","Risk Game Replay",file);
-        }catch(AmazonServiceException e){
-            System.err.println(e.getErrorMessage());
-            System.exit(1);
-        }
-
-        }*/
+        log.closeLogger();
+        ree.uploadFile(log.getLog());
         }
         catch(IOException e1){
             System.out.println("Error during reading/writing");
         }
 
-
+    
         
     }
     
