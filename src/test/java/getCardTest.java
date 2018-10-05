@@ -3,9 +3,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class getCardTest {
+public class getCardTest{
 
     @Test
     public void getCardTest(){
