@@ -1,2 +1,9 @@
 language: java
+
 jdk: oraclejdk8
+
+install: true
+
+script:
+- mvn -f pom.xml test
+- bash <(curl -s https://codecov.io/bash)
