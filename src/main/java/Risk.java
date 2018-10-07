@@ -8,7 +8,7 @@ public class Risk  {
     public static void main(String[] args) {
 
         try {
-            Replay ree = new Replay();
+            //Replay ree = new Replay();
             Logger log = new Logger();
 
             int numPlayers;
@@ -69,7 +69,7 @@ public class Risk  {
         System.out.println(players.get(playerTurn).getName()+" WINS!!!");
 
         log.closeLogger();
-        ree.uploadFile(log.getLog());
+        //ree.uploadFile(log.getLog());
         }
         catch(IOException e1){
             System.out.println("Error during reading/writing");
