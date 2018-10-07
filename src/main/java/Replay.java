@@ -15,7 +15,7 @@ public class Replay {
     String fileKey;
 
     public Replay() {
-        awsCreds = new BasicAWSCredentials("AKIAJXCQ4OCUFOIP64WA", "rVg2ciJv1Tec4G72hOFEt+9V9L6LS/nZiesLYZ3C");
+        awsCreds = new BasicAWSCredentials("AAAAAAAA", "AAAAAAAAAAAA");
         s3 = AmazonS3ClientBuilder.standard()
                 .withRegion("us-east-2")
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
