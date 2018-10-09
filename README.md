@@ -9,5 +9,4 @@
 
 
 [![Build Status](https://travis-ci.com/cmohr368/Risk.svg?branch=master)](https://travis-ci.com/cmohr368/Risk)
-[![Build Status](https://api.travis-ci.com/repos/cmohr368/Risk.svg?branch=master)](https://api.travis-ci.com/repos/cmohr368/Risk.svg?branch=master)
 [![codecov](https://codecov.io/gh/Ethaninabox/Risk/branch/master/graph/badge.svg)](https://codecov.io/gh/Ethaninabox/Risk)
