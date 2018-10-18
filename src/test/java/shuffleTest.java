@@ -6,9 +6,9 @@ import java.util.List;
 
 public class shuffleTest {
 
-    /*@Test
+    @Test
     public void shuffleTest(){
         int deckSize = 42;
         assertEquals(Risk.shuffleDeck().size(), deckSize);
-    }*/
+    }
 }

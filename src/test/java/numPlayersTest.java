@@ -11,7 +11,7 @@ import java.util.List;
 
 public class numPlayersTest{
 
-    /*@Test
+    @Test
     public void numPlayersTest(){
         //Testing with 3 players to make sure there are 3 players
         ArrayList<Player> players= new ArrayList<>();
@@ -35,5 +35,5 @@ public class numPlayersTest{
     private int getSize(ArrayList<Player> players, ArrayList<territory> territories, int numplayers) {
         int num= players.size();
         return num;
-    }*/
+    }
 }
