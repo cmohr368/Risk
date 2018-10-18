@@ -6,10 +6,10 @@ import java.util.List;
 
 public class createTerritoryTest {
 
-    @Test
+    /*@Test
     public void createTerritoryTest(){
         ArrayList<territory> territories = new ArrayList<>();
         int totalTerritories = 42;
         assertEquals(Risk.createTerritories(territories).size(), totalTerritories);
-    }
+    }*/
 }
