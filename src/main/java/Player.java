@@ -1,10 +1,12 @@
 
 import java.util.ArrayList;
+import java.util.List;
 
 class Player {
     String name;
     ArrayList<territory> territories;
     int unPlacedArmies;
+    int territoriesConquered;
     
     int northCount;
     int europeCount;
@@ -16,12 +18,16 @@ class Player {
     int infantryCount;
     int cavalryCount;
     int artilleryCount;
+
+    ArrayList<Observer> observers;
     
     Player(String a, int b){
         name=a;
         unPlacedArmies=b;
         territories = new ArrayList<>();
-        
+
+        observers= new ArrayList<>();
+
         northCount=0;
         europeCount=0;
         southCount=0;
@@ -32,6 +38,8 @@ class Player {
         infantryCount=0;
         cavalryCount=0;
         artilleryCount=0;
+
+        territoriesConquered=0;
     }
     
     public String getName(){
@@ -63,7 +71,7 @@ class Player {
         }
         if(a.continent=="Australia"){   
             australiaCount++;
-        }  
+        }
     }
     public void looseTerritory(territory a){
         territories.remove(a);
@@ -86,6 +94,8 @@ class Player {
             australiaCount--;
         }
     }
+
+    public void conquered(){territoriesConquered++;}
     
     public void placeArmy(){
         unPlacedArmies--;
