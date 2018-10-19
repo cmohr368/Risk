@@ -3,16 +3,16 @@ import org.junit.jupiter.api.Test;
 
 public class getCardTest {
 
-    /*@Test
+    @Test
     public void getCardTest(){
         Deck deck= new Deck();
-
-        if(deck.getCard()== 1){
-            assertEquals(deck.getCard(), 1);
-        } else if(deck.getCard()== 2){
-            assertEquals(deck.getCard(), 2);
+        int topCard= deck.getCard();
+        if(topCard== 1){
+            assertEquals(topCard, 1);
+        } else if(topCard== 2){
+            assertEquals(topCard, 2);
         } else {
-            assertEquals(deck.getCard(), 3);
+            assertEquals(topCard, 3);
         }
-    }*/
+    }
 }
