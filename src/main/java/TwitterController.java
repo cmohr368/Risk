@@ -1,40 +1,39 @@
-/*import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Properties;
 
 
-public class Twitter {
+public class TwitterController {
 
-    Properties prop = new Properties();
+    Properties properties = new Properties();
     InputStream input = null;
-    String[] credentialData = new String[4];
-    Twitter twitter;
+    HashMap<String,String> credentials = new HashMap<>();
+    TwitterController TwitterController;
     User user;
+    Twitter twitter;
 
 
 
-    public String[] getKeysNTokens()
+    public HashMap<String,String> getKeys()
     {
         try {
             input = new FileInputStream("secret_FruitCakes.properties");
-            prop.load(input);
+            properties.load(input);
 
-            credentialData[0] = prop.getProperty("oauth.consumerKey");
-            credentialData[1] = prop.getProperty("oauth.consumerSecret");
-            credentialData[2] = prop.getProperty("oauth.accessToken");
-            credentialData[3] = prop.getProperty("oauth.accessTokenSecret");
+            credentials.put("Consumer Key",properties.getProperty("twitter.consumerKey"));
+            credentials.put("Consumer Secret",properties.getProperty("twitter.consumerSecret"));
+            credentials.put("Access Token",properties.getProperty("twitter.accessToken"));
+            credentials.put("Access Token Secret",properties.getProperty("twitter.accessTokenSecret"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -48,13 +47,13 @@ public class Twitter {
             }
         }
 
-        return credentialData;
+        return credentials;
     }
-    public void connectTwitter(String[] cre)
+    public void connectTwitter(HashMap<String,String> cre)
     {
         twitter = TwitterFactory.getSingleton();
-        twitter.setOAuthConsumer(cre[0], cre[1]);
-        AccessToken accesstoken = new AccessToken(cre[2], cre[3]);
+        twitter.setOAuthConsumer(credentials.get("Consumer Key"),credentials.get("Consumer Secret"));
+        AccessToken accesstoken = new AccessToken(credentials.get("Access Token"), credentials.get("Access Token Secret"));
         twitter.setOAuthAccessToken(accesstoken);
         try {
             user = twitter.verifyCredentials();
@@ -72,4 +71,4 @@ public class Twitter {
         }
     }
 
-}*/
+}

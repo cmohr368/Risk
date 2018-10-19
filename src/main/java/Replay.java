@@ -7,15 +7,19 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Properties;
 
 public class Replay {
     private BasicAWSCredentials awsCreds;
     private AmazonS3 s3;
     String bucketName;
     String fileKey;
+    Properties properties = new Properties();
 
     public Replay() {
-        awsCreds = new BasicAWSCredentials("AAAAAAAA", "AAAAAAAAAAAA");
+        String accessKey = properties.getProperty("AWS.accessKey");
+        String secretKey = properties.getProperty("AWS.secretKey");
+        awsCreds = new BasicAWSCredentials(accessKey,secretKey);
         s3 = AmazonS3ClientBuilder.standard()
                 .withRegion("us-east-2")
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
