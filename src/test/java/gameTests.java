@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-public class GameTests {
+public class gameTests {
 
     @Test
     public void setNumPlayersTest(){
