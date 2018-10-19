@@ -30,10 +30,10 @@ public class TwitterController {
             input = new FileInputStream("secret_FruitCakes.properties");
             properties.load(input);
 
-            credentials.put("Consumer Key",properties.getProperty("oauth.consumerKey"));
-            credentials.put("Consumer Secret",properties.getProperty("oauth.consumerSecret"));
-            credentials.put("Access Token",properties.getProperty("oauth.accessToken"));
-            credentials.put("Access Token Secret",properties.getProperty("oauth.accessTokenSecret"));
+            credentials.put("Consumer Key",properties.getProperty("twitter.consumerKey"));
+            credentials.put("Consumer Secret",properties.getProperty("twitter.consumerSecret"));
+            credentials.put("Access Token",properties.getProperty("twitter.accessToken"));
+            credentials.put("Access Token Secret",properties.getProperty("twitter.accessTokenSecret"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
