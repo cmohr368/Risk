@@ -8,7 +8,6 @@ public class Risk  {
     public static void main(String[] args) {
         game=new Game();
 
-
         int startingNum=0;
         System.out.println("WELCOME TO RISK");
         Scanner sc = new Scanner(System.in);
@@ -167,7 +166,6 @@ public class Risk  {
 
             sc.nextLine();
 
-
             if(!(CreditMgr.undo(game))){
                 //may cause issue, check if its being saved to game territories
                 territory claim=game.getTerritories().get(territoryNum);
@@ -321,8 +319,6 @@ public class Risk  {
             t1Wins=true;
         }
 
-
-
         if(!(CreditMgr.undo(game))) {
 
             t1.deleteArmy(t1Deaths);
@@ -376,6 +372,8 @@ public class Risk  {
             moveTroops(troops, game.territories.get(territoryNum), game.territories.get(territory2Num));
             printTerritories();
             sc.nextLine();
+
+
 
             if(CreditMgr.undo(game)) {
                 moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
@@ -586,7 +584,7 @@ public class Risk  {
     }
 
     public static void conquered(){
-        //print to twitter
+        game.post();
     }
     
     //clean later
