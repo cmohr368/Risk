@@ -1,18 +1,18 @@
-//import static org.junit.jupiter.api.Assertions.*;
-//import org.junit.jupiter.api.Test;
-//
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//
-//public class getCardTest {
-//
-//    @Test
-//    public void getCardTest(){
-//        int sampleCard1= 1, sampleCard2= 2, sampleCard3= 3;
-//        ArrayList<Integer> list= new ArrayList <> (Arrays.asList(sampleCard1, sampleCard2, sampleCard3));
-//        assertEquals(Deck.getCard(list), 1);
-//        assertEquals(Deck.getCard(list), 2);
-//        assertEquals(Deck.getCard(list), 3);
-//    }
-//}
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+public class getCardTest {
+
+    @Test
+    public void getCardTest(){
+        Deck deck= new Deck();
+
+        if(deck.getCard()== 1){
+            assertEquals(deck.getCard(), 1);
+        } else if(deck.getCard()== 2){
+            assertEquals(deck.getCard(), 2);
+        } else {
+            assertEquals(deck.getCard(), 3);
+        }
+    }
+}
