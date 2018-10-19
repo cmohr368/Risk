@@ -1,14 +1,18 @@
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Scanner;
 
-class territory {
+class territory extends Observable {
     ArrayList<territory> neighbors;
     boolean occupied;
     int armies;
     String continent;
     String name;
+    String playerName;
     int playerNum;
+    RiskObserver observer = new RiskObserver();
+
     
     
     territory(String name, String continent){
@@ -17,6 +21,7 @@ class territory {
         occupied=false;
         this.name=name;
         this.continent=continent;
+        addObserver(observer);
     }
         
     public void addArmy(){
@@ -46,6 +51,8 @@ class territory {
         return attackNumbers;
     }
     public ArrayList<Integer> defend(int num){
+        setChanged();
+        notifyObservers(getPlayerName());
         ArrayList<Integer> defendNumbers= new ArrayList<>();
         for(int i=0; i<num;i++){
             defendNumbers.add((int)(Math.random()*6)+1);
@@ -67,6 +74,10 @@ class territory {
     public int getPlayerNum(){
         return playerNum;
     }
+
+    public void setPlayerName(String name){playerName = name;}
+
+    public String getPlayerName(){return playerName;}
 
     public String getContinent() {
         return continent;

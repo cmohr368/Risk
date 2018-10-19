@@ -22,14 +22,13 @@ class Player {
     Credit wallet;
     int undos;
 
-    ArrayList<Observer> observers;
     
     Player(String a, int b){
         name=a;
         unPlacedArmies=b;
         territories = new ArrayList<>();
 
-        observers= new ArrayList<>();
+
 
         northCount=0;
         europeCount=0;
