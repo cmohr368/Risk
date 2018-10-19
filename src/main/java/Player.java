@@ -19,6 +19,9 @@ class Player {
     int cavalryCount;
     int artilleryCount;
 
+    Credit wallet;
+    int undos;
+
     ArrayList<Observer> observers;
     
     Player(String a, int b){
@@ -40,6 +43,9 @@ class Player {
         artilleryCount=0;
 
         territoriesConquered=0;
+
+        wallet=new Credit();
+        undos=0;
     }
     
     public String getName(){
@@ -108,15 +114,18 @@ class Player {
         return territories;
     }
 
-    void useCavalry() {
+    public void useCavalry() {
         cavalryCount-=3;
     }
 
-    void useArtillery() {
+    public void useArtillery() {
         cavalryCount-=3;
     }
 
-    void useInfantry() {
-        cavalryCount-=3;
+    public void useInfantry() {cavalryCount-=3;}
+
+    public void addUndos(int amount) {
+        undos+=amount;
     }
+    public void useUndo(){undos--;}
 }

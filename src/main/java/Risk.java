@@ -57,6 +57,8 @@ public class Risk  {
                 game.nextStage();
             }
             else if(game.stage==1) {
+                System.out.println(game.currentPlayer().name+" it is now your turn");
+                CreditMgr.buying(game);
                 reEnforce();
                 game.nextStage();
             }
@@ -166,7 +168,7 @@ public class Risk  {
 
             System.out.println("\nWould you like to undo your move?(y/n)");
             String undo=sc.nextLine();
-            if(!(undo.equals("y"))){
+            if(!(CreditMgr.undo(game))){
                 //may cause issue, check if its being saved to game territories
                 territory claim=game.getTerritories().get(territoryNum);
                 claimed++;
@@ -217,7 +219,7 @@ public class Risk  {
 
             System.out.println("\nWould you like to undo your move?(y/n)");
             String undo=sc.nextLine();
-            if(undo.equals("y")) {
+            if(CreditMgr.undo(game)) {
                 game.getTerritories().get(territoryNum).deleteArmy(numArmies);
                 i--;
             }
@@ -323,7 +325,7 @@ public class Risk  {
         System.out.println("\nWould you like to undo your move?(y/n)");
         String undo=sc.nextLine();
 
-        if(!(undo.equals("y"))) {
+        if(!(CreditMgr.undo(game))) {
 
             t1.deleteArmy(t1Deaths);
             t2.deleteArmy(t2Deaths);
@@ -377,7 +379,7 @@ public class Risk  {
             sc.nextLine();
             System.out.println("\nWould you like to undo your move?(y/n)");
             String undo=sc.nextLine();
-            if(undo.equals("y")) {
+            if(CreditMgr.undo(game)) {
                 moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
                 printTerritories();
             }
