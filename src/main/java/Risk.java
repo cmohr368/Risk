@@ -133,6 +133,7 @@ public class Risk  {
                 game.players.get(i).placeArmy();
                 game.territories.get(x).occupy();
                 game.territories.get(x).setPlayerNum(i);
+                game.territories.get(x).setPlayerName(game.players.get(i).getName());
             }
             count+=numTerritories;
         }
@@ -178,6 +179,7 @@ public class Risk  {
                 if (!claim.isOccupied()) {
                     claim.occupy();
                     claim.setPlayerNum(game.getPlayerTurn());
+                    claim.setPlayerName(game.players.get(game.getPlayerTurn()).getName());
                     game.currentPlayer().addTerritory(claim);
 
                 }
@@ -341,6 +343,7 @@ public class Risk  {
 
                 moveTroops(armiesMoving, t1, t2);
                 t2.setPlayerNum(game.getPlayerTurn());
+                t2.setPlayerName(game.players.get(game.getPlayerTurn()).getName());
                 p1.addTerritory(t2);
                 p2.looseTerritory(t2);
 
