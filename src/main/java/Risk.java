@@ -371,6 +371,9 @@ public class Risk  {
             }
             moveTroops(troops, game.territories.get(territoryNum), game.territories.get(territory2Num));
             printTerritories();
+            sc.nextLine();
+
+
 
             if(CreditMgr.undo(game)) {
                 moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
