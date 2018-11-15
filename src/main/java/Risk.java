@@ -32,17 +32,20 @@ public class Risk  {
         TelegramBotsApi botsApi = new TelegramBotsApi();
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-        try{
+        try {
             botsApi.registerBot(new RiskBot(botOptions));
-        } catch(TelegramApiException e){
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
 
-        game=new Game();
+        game = new Game();
 
-        int startingNum=0;
         System.out.println("WELCOME TO RISK");
+        playing();
+    }
+    public static void playing(){
         Scanner sc = new Scanner(System.in);
+        int startingNum = 0;
 
         /*
         System.out.println("Would you like to load a game?(y/n)");
