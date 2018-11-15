@@ -1,4 +1,3 @@
-
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
@@ -13,7 +12,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Risk  {
+public class MainBot  {
     static Game game;
 
     static TimerTask task = new TimerTask()
@@ -27,23 +26,8 @@ public class Risk  {
         }
     };
 
-    public static void main(String[] args) {
-        ApiContextInitializer.init();
-        TelegramBotsApi botsApi = new TelegramBotsApi();
-        RiskBot myBot = new RiskBot();
-
-        try {
-            botsApi.registerBot(myBot);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-
-        game = new Game();
-
-        System.out.println("WELCOME TO RISK");
-        playing();
-    }
     public static void playing(){
+        game = new Game();
         Scanner sc = new Scanner(System.in);
         int startingNum = 0;
 
@@ -57,29 +41,29 @@ public class Risk  {
         */
 
         //else{
-            game.createTerritories();
-            System.out.println("\nHow many players?");
-            int numPlayers = sc.nextInt();
-            game.setNumPlayers(numPlayers);
+        game.createTerritories();
+        System.out.println("\nHow many players?");
+        int numPlayers = sc.nextInt();
+        game.setNumPlayers(numPlayers);
 
-            sc.nextLine();
+        sc.nextLine();
 
-            game.createPlayers();
+        game.createPlayers();
 
-            startingNum = chooseFirstPlayer(game.getNumPlayers(), game.getPlayers());
-            game.setPlayerTurn(startingNum);
+        startingNum = chooseFirstPlayer(game.getNumPlayers(), game.getPlayers());
+        game.setPlayerTurn(startingNum);
 
-            System.out.println("\n" + game.currentPlayer().getName() + " will start");
-            System.out.println("\nWould you like to auto assign the territories?(y/n)");
-            String answer = sc.nextLine();
+        System.out.println("\n" + game.currentPlayer().getName() + " will start");
+        System.out.println("\nWould you like to auto assign the territories?(y/n)");
+        String answer = sc.nextLine();
 
-            if (answer.equals("y")) {
-                random();
-            }
+        if (answer.equals("y")) {
+            random();
+        }
 
-            else {
-                claiming();
-            }
+        else {
+            claiming();
+        }
         //}
 
         while(!game.getGameOver()){
@@ -104,13 +88,13 @@ public class Risk  {
     }
 
     public static void loadGame(Game load){game= load;}
-    
+
     //rolls dice for each player and returns the player number of the winner
     public static int chooseFirstPlayer(int numPlayers, ArrayList<Player> players){
         int max=0;
         ArrayList<Integer> startingNum = new ArrayList<>();
-        
-        
+
+
         for(int i=0; i<numPlayers;i++){
             int temp=(int)(Math.random()*6)+1;
             System.out.println(players.get(i).getName()+" rolled a "+temp);
@@ -119,7 +103,7 @@ public class Risk  {
                 startingNum.clear();
                 startingNum.add(i);
             }
-            
+
             else if(temp==max){
                 startingNum.add(i);
             }
@@ -138,7 +122,7 @@ public class Risk  {
         }
         return startingNum.get(0);
     }
-    
+
     //works only for player groups of 2, 3, and 4 for now because 42 is only divisible by those
     public static void random(){
         int count=0;
@@ -163,7 +147,7 @@ public class Risk  {
             }
             count+=numTerritories;
         }
-        
+
         for(int i=0;i<game.players.size();i++){
             int counter=0;
             while(game.players.get(i).unPlacedArmies!=0){
@@ -175,9 +159,9 @@ public class Risk  {
                 }
             }
         }
-        
+
     }
-    
+
     public static void claiming(){
         Scanner sc = new Scanner(System.in);
         int claimed=0;
@@ -187,7 +171,7 @@ public class Risk  {
             printTerritories();
             System.out.println("\n"+game.currentPlayer().getName()+" place an army: (armies left "+game.currentPlayer().unplacedArmies()+")");
             int territoryNum=sc.nextInt();
-            
+
             //add if number is greater then 41 and if its not a number
             territoryNum=checkTerritory(territoryNum, claimed);
 
@@ -209,34 +193,34 @@ public class Risk  {
                 }
                 game.nextPlayer();
             }
-         }
+        }
     }
 
-    
+
     public static void reEnforce( ){
         Scanner sc = new Scanner(System.in);
         Player p1=game.currentPlayer();
 
         int armies= supportCount();
         armies+=redeemCards();
-        
+
         System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
         for(int i=0;i<armies;i++){
             System.out.println("\nChoose a territory to place armies on ("+(armies-i)+" left)");
             int territoryNum=sc.nextInt();
-            
+
             while(!playersTerritory(territoryNum)){
                 System.out.println("\nTerritory is already claimed by other player, please choose a different territory");
                 territoryNum=sc.nextInt();
             }
-            
+
             System.out.println("\nHow many armies would you like to add (max "+(armies-i)+")");
             int numArmies=sc.nextInt();
             while(numArmies>armies-i) {
                 System.out.println("\nChoose a number less then " + (armies - i));
                 numArmies = sc.nextInt();
             }
-            
+
 
             game.getTerritories().get(territoryNum).addArmies(numArmies);
             printTerritories();
@@ -254,7 +238,7 @@ public class Risk  {
         }
         game.nextStage();
     }
-    
+
     public static void attack(){
         printTerritories();
         Scanner sc = new Scanner(System.in);
@@ -299,7 +283,7 @@ public class Risk  {
             sc.nextLine();
             System.out.println("\nWould you like to attack again?(y/n)");
             answer= sc.nextLine();
-            
+
         }while(answer.equals("y"));
         game.nextStage();
     }
@@ -332,16 +316,16 @@ public class Risk  {
         }
         for(int i=0;i<numBattles;i++){
             if(dice1.get(i)>dice2.get(i)){
-               t2Deaths++; 
+                t2Deaths++;
             }
             else{
-               t1Deaths++;
+                t1Deaths++;
             }
         }
 
         System.out.println("\n"+p1.getName()+" lost "+t1Deaths+" armies");
         System.out.println(p2.getName()+" lost "+t2Deaths+" armies");
-        
+
         if(t2.numArmies()==t2Deaths){
             t1Wins=true;
         }
@@ -376,17 +360,17 @@ public class Risk  {
     //needs to be cleaned more
     public static void fortify(){
         ArrayList<Integer> movedTo= new ArrayList<>();
-        
+
         Scanner sc = new Scanner(System.in);
         System.out.println("\n"+game.currentPlayer().getName()+" you may now fortify you territories");
         String answer="";
-        
+
         do{
             int territoryNum=chooseMovers(movedTo);
             int territory2Num=movingTo(territoryNum);
 
             movedTo.add(territory2Num);
-            
+
             System.out.println("\nHow many troops would you like to move?");
             int troops= sc.nextInt();
             if(!(troops<game.territories.get(territoryNum).numArmies())){
@@ -441,15 +425,15 @@ public class Risk  {
         if(p1.australiaCount==4){armies+=2;}
 
         printTerritories();
-        
+
         return armies;
     }
-    
+
     public static int redeemCards(){
         Scanner sc = new Scanner(System.in);
         int armies=0;
         Player p1=game.currentPlayer();
-        
+
         System.out.println("\nInfantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
 
         if(p1.infantryCount>2){
@@ -483,8 +467,8 @@ public class Risk  {
         }
         return armies;
     }
-    
-    
+
+
 
     public static int checkTerritory(int territoryNum, int claimed){
         Scanner sc = new Scanner(System.in);
@@ -614,7 +598,7 @@ public class Risk  {
     public static void conquered(){
         game.post();
     }
-    
+
     //clean later
     public static void printTerritories(){
         String continent;
@@ -673,10 +657,102 @@ public class Risk  {
         }
     }
 
+    public static void check(RiskBot myBot){
+        if(game.stage==1){
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            myBot.sendMessage("Do you want to reinforce");
+            game.input = getStringMessage(myBot);
+            timer.cancel();
+            if(game.input.equals("y")) {
+                reEnforce();
+            }
+            game.input="";
+        }
+        else if(game.stage==2) {
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            myBot.sendMessage("Do you want to attack?");
+            game.input = getStringMessage(myBot);
+            timer.cancel();
+            if(game.input.equals("y")) {
+                attack();
+            }
+            game.input="";
+        }
+        else if(game.stage==3){
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            myBot.sendMessage("Do you want to fortify?");
+            game.input = getStringMessage(myBot);
+            timer.cancel();
+            if(game.input.equals("y")) {
+                fortify();
+            }
+            game.input="";
+        }
+    }
+
     public static void timeOut(){
         System.out.print(game.currentPlayer().getName()+" took to long.");
         game.nextPlayer();
         game.stage=1;
         System.out.println(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
+    }
+
+    public static String getStringMessage(RiskBot bot){
+        String userInput = "";
+        if(bot != null){
+            do{
+                bot.clearMessage();
+
+                while(bot.getMessage() == null){
+                    try{
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                if(bot.getMessage() != null){
+                    try{
+                        userInput = bot.getMessage();
+                    }catch(Exception e){
+                        userInput = "";
+                    }
+                }
+
+            }while (userInput.isEmpty());
+        }
+
+        return userInput;
+    }
+
+    public static Integer getIntMessage(RiskBot bot){
+        int userInput = -1;
+        if(bot != null){
+            do{
+                bot.clearMessage();
+
+                while(bot.getMessage() == null){
+                    try{
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                if(bot.getMessage() != null){
+                    try{
+                        userInput = Integer.parseInt(bot.getMessage());
+                    }catch(Exception e){
+                        userInput = -1;
+                    }
+                }
+
+            }while (userInput == -1);
+        }
+
+        return userInput;
     }
 }
