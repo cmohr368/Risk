@@ -679,4 +679,62 @@ public class Risk  {
         game.stage=1;
         System.out.println(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
     }
+
+    public static String getStringMessage(RiskBot bot, String sendMessage){
+        String userInput = "";
+        if(bot != null){
+            do{
+                bot.clearMessage();
+                bot.sendMessage(sendMessage);
+
+                while(bot.getMessage() == null){
+                    try{
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                if(bot.getMessage() != null){
+                    try{
+                        userInput = bot.getMessage();
+                    }catch(Exception e){
+                        userInput = "";
+                    }
+                }
+
+                }while (userInput.isEmpty());
+        }
+
+        return userInput;
+    }
+
+    public static Integer getIntMessage(RiskBot bot, String sendMessage){
+        int userInput = -1;
+        if(bot != null){
+            do{
+                bot.clearMessage();
+                bot.sendMessage(sendMessage);
+
+                while(bot.getMessage() == null){
+                    try{
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                if(bot.getMessage() != null){
+                    try{
+                        userInput = Integer.parseInt(bot.getMessage());
+                    }catch(Exception e){
+                        userInput = -1;
+                    }
+                }
+
+            }while (userInput == -1);
+        }
+
+        return userInput;
+    }
 }
