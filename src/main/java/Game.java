@@ -1,3 +1,5 @@
+import com.amazonaws.services.dynamodbv2.xspec.M;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -78,6 +80,25 @@ public class Game {
             players.add(a);
         }
     }
+
+    public void createPlayers(RiskBot myBot){
+
+        int startingArmies=0;
+        if(numPlayers==2){startingArmies=40;}
+        if(numPlayers==3){startingArmies=35;}
+        if(numPlayers==4){startingArmies=30;}
+        if(numPlayers==5){startingArmies=25;}
+        if(numPlayers==6){startingArmies=20;}
+
+        for(int i=0; i<numPlayers;i++){
+            String name;
+            myBot.sendMessage("Insert name of player "+(i+1)+"?");
+            name= MainBot.getStringMessage(myBot);
+            Player a=new Player(name, startingArmies);
+            players.add(a);
+        }
+    }
+
     public void post(){
         String tweet="";
         for(int i=0; i<players.size();i++){
