@@ -9,6 +9,7 @@ public class Game {
     ArrayList<Player> players;
     int playerTurn;
     int stage;
+    String input;
     //TwitterController tweet;
 
     Game(){
@@ -19,6 +20,7 @@ public class Game {
         deck=new Deck();
         territories=new ArrayList<>();
         players=new ArrayList<>();
+        input="";
 
         //tweet = new TwitterController();
         //tweet.connectTwitter(tweet.getKeys());
