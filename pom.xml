@@ -36,6 +36,11 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.11.420</version>
         </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>4.1</version>
+        </dependency>
     </dependencies>
     <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
