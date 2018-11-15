@@ -673,6 +673,39 @@ public class Risk  {
         }
     }
 
+    public static void check(RiskBot myBot){
+        if(game.stage==1){
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            game.input = getStringMessage(myBot, "Do you want to reinforce?");
+            timer.cancel();
+            if(game.input.equals("y")) {
+                reEnforce();
+            }
+            game.input="";
+        }
+        else if(game.stage==2) {
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            game.input = getStringMessage(myBot, "Do you want to attack?");
+            timer.cancel();
+            if(game.input.equals("y")) {
+                attack();
+            }
+            game.input="";
+        }
+        else if(game.stage==3){
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            game.input = getStringMessage(myBot, "Do you want to fortify?");
+            timer.cancel();
+            if(game.input.equals("y")) {
+                fortify();
+            }
+            game.input="";
+        }
+    }
+
     public static void timeOut(){
         System.out.print(game.currentPlayer().getName()+" took to long.");
         game.nextPlayer();
