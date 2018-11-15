@@ -10,25 +10,42 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Risk  {
     static Game game;
+
+    static TimerTask task = new TimerTask()
+    {
+        public void run()
+        {
+            if( game.input.equals("") )
+            {
+                timeOut();
+            }
+        }
+    };
+
     public static void main(String[] args) {
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-        try{
+        try {
             botsApi.registerBot(new RiskBot(botOptions));
-        } catch(TelegramApiException e){
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
 
-        game=new Game();
+        game = new Game();
 
-        int startingNum=0;
         System.out.println("WELCOME TO RISK");
+        playing();
+    }
+    public static void playing(){
         Scanner sc = new Scanner(System.in);
+        int startingNum = 0;
 
         /*
         System.out.println("Would you like to load a game?(y/n)");
@@ -73,21 +90,13 @@ public class Risk  {
                 claiming();
                 game.nextStage();
             }
-            else if(game.stage==1) {
+            else if(game.stage==1){
                 System.out.println(game.currentPlayer().name+" it is now your turn");
                 CreditMgr.buying(game);
-                reEnforce();
-                game.nextStage();
+                check();
             }
-            else if(game.stage==2) {
-                attack();
-                game.nextStage();
-            }
-            else if(game.stage==3){
-                fortify();
-                game.nextStage();
-                game.nextPlayer();
-                conquered();
+            else{
+                check();
             }
         }
         conquered();
@@ -243,18 +252,17 @@ public class Risk  {
             }
 
         }
+        game.nextStage();
     }
     
     public static void attack(){
         printTerritories();
-
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("\nWould you like to attack this turn?(y/n)");
-        String answer= sc.nextLine();
+        String answer= "";
 
 
-        while(answer.equals("y")){
+        do{
             System.out.println("\nChoose territory to attack with");
             int territoryNum= sc.nextInt();
 
@@ -292,7 +300,8 @@ public class Risk  {
             System.out.println("\nWould you like to attack again?(y/n)");
             answer= sc.nextLine();
             
-        }
+        }while(answer.equals("y"));
+        game.nextStage();
     }
 
 
@@ -370,10 +379,9 @@ public class Risk  {
         
         Scanner sc = new Scanner(System.in);
         System.out.println("\n"+game.currentPlayer().getName()+" you may now fortify you territories");
-        System.out.println("Would you like to move any armies?(y/n)");
-        String answer= sc.nextLine();
+        String answer="";
         
-        while(answer.equals("y")){
+        do{
             int territoryNum=chooseMovers(movedTo);
             int territory2Num=movingTo(territoryNum);
 
@@ -400,7 +408,9 @@ public class Risk  {
 
             System.out.println("\nWould you like to move more troops?(y/n)");
             answer= sc.nextLine();
-        }
+        }while(answer.equals("y"));
+        game.nextStage();
+        game.nextPlayer();
     }
 
 
@@ -624,5 +634,49 @@ public class Risk  {
                 i++;
             }while(i<game.getTerritories().size()&&continent==game.getTerritories().get(i).getContinent());
         }
+    }
+
+    public static void check(){
+        Scanner sc = new Scanner(System.in);
+        if(game.stage==1){
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            System.out.println("Do you want to Renforce?");
+            game.input=sc.nextLine();
+            timer.cancel();
+            if(game.input.equals("y")) {
+                reEnforce();
+            }
+            game.input="";
+        }
+        else if(game.stage==2) {
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            System.out.println("Do you want to Attack?");
+            game.input=sc.nextLine();
+            timer.cancel();
+            if(game.input.equals("y")) {
+                attack();
+            }
+            game.input="";
+        }
+        else if(game.stage==3){
+            Timer timer = new Timer();
+            timer.schedule( task, 30*1000 );
+            System.out.println("Do you want to Fortify?");
+            game.input=sc.nextLine();
+            timer.cancel();
+            if(game.input.equals("y")) {
+                fortify();
+            }
+            game.input="";
+        }
+    }
+
+    public static void timeOut(){
+        System.out.print(game.currentPlayer().getName()+" took to long.");
+        game.nextPlayer();
+        game.stage=1;
+        System.out.println(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
     }
 }
