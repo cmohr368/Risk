@@ -677,7 +677,8 @@ public class Risk  {
         if(game.stage==1){
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
-            game.input = getStringMessage(myBot, "Do you want to reinforce?");
+            myBot.sendMessage("Do you want to reinforce");
+            game.input = getStringMessage(myBot);
             timer.cancel();
             if(game.input.equals("y")) {
                 reEnforce();
@@ -687,7 +688,8 @@ public class Risk  {
         else if(game.stage==2) {
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
-            game.input = getStringMessage(myBot, "Do you want to attack?");
+            myBot.sendMessage("Do you want to attack?");
+            game.input = getStringMessage(myBot);
             timer.cancel();
             if(game.input.equals("y")) {
                 attack();
@@ -697,7 +699,8 @@ public class Risk  {
         else if(game.stage==3){
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
-            game.input = getStringMessage(myBot, "Do you want to fortify?");
+            myBot.sendMessage("Do you want to fortify?");
+            game.input = getStringMessage(myBot);
             timer.cancel();
             if(game.input.equals("y")) {
                 fortify();
@@ -713,12 +716,11 @@ public class Risk  {
         System.out.println(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
     }
 
-    public static String getStringMessage(RiskBot bot, String sendMessage){
+    public static String getStringMessage(RiskBot bot){
         String userInput = "";
         if(bot != null){
             do{
                 bot.clearMessage();
-                bot.sendMessage(sendMessage);
 
                 while(bot.getMessage() == null){
                     try{
@@ -742,12 +744,11 @@ public class Risk  {
         return userInput;
     }
 
-    public static Integer getIntMessage(RiskBot bot, String sendMessage){
+    public static Integer getIntMessage(RiskBot bot){
         int userInput = -1;
         if(bot != null){
             do{
                 bot.clearMessage();
-                bot.sendMessage(sendMessage);
 
                 while(bot.getMessage() == null){
                     try{
