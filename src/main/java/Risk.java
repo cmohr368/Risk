@@ -30,10 +30,10 @@ public class Risk  {
     public static void main(String[] args) {
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
-        DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
+        RiskBot myBot = new RiskBot();
 
         try {
-            botsApi.registerBot(new RiskBot(botOptions));
+            botsApi.registerBot(myBot);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
