@@ -12,5 +12,10 @@ public class RiskObserver implements Observer{
         System.out.println(playerName + " is under attack!");
     }
 
+    public void update(Observable o, Object obj, RiskBot myBot){
+        territoryUnderAttack = (territory) o;
+        playerName = territoryUnderAttack.getPlayerName();
+        myBot.sendMessage(playerName + " is under attack!");
+    }
 
 }
