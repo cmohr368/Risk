@@ -10,30 +10,17 @@ import java.util.Scanner;
 
 public class RiskBot extends TelegramLongPollingBot{
 
+    private String message;
+    private long chat_id = 0;
 
-    protected RiskBot(DefaultBotOptions options){
-        super(options);
-    }
 
     @Override
     public void onUpdateReceived(Update update){
 
         /*Check if update has message and message has text*/
         if(update.hasMessage() && update.getMessage().hasText()){
-            String message = update.getMessage().getText();
-            long chat_id = update.getMessage().getChatId();
-
-            SendMessage sendMessage = new SendMessage()
-                    .setChatId(chat_id)
-                    .setText(message);
-
-
-            try{
-                execute(sendMessage);
-            } catch(TelegramApiException ex){
-                ex.printStackTrace();
-            }
-
+            message = update.getMessage().getText();
+            chat_id = update.getMessage().getChatId();
         }
     }
 
@@ -49,8 +36,29 @@ public class RiskBot extends TelegramLongPollingBot{
         return "aaaaaaaaa";
     }
 
-    public Scanner getScanner(String message){
-        Scanner sc = new Scanner(message);
-        return sc;
+    public String getMessage(){
+        return message;
+    }
+
+    public void sendMessage(String messageToSend){
+        while(chat_id == 0){
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        SendMessage message = new SendMessage()
+                .setChatId(chat_id)
+                .setText(messageToSend);
+        try{
+            execute(message);
+        }catch(TelegramApiException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void clearMessage(){
+        message = null;
     }
 }
