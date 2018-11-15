@@ -59,7 +59,7 @@ public class MainBot  {
         int numPlayers = getIntMessage(myBot);
         game.setNumPlayers(numPlayers);
 
-        game.createPlayers();
+        game.createPlayers(myBot);
 
         startingNum = chooseFirstPlayer(game.getNumPlayers(), game.getPlayers());
         game.setPlayerTurn(startingNum);
@@ -87,7 +87,7 @@ public class MainBot  {
             }
             else if(game.stage==1){
                 myBot.sendMessage(game.currentPlayer().name+" it is now your turn");
-                CreditMgr.buying(game);
+                CreditMgr.buying(game,myBot);
                 check();
             }
             else{
@@ -186,7 +186,7 @@ public class MainBot  {
             //add if number is greater then 41 and if its not a number
             territoryNum=checkTerritory(territoryNum, claimed);
 
-            if(!(CreditMgr.undo(game))){
+            if(!(CreditMgr.undo(game,myBot))){
                 //may cause issue, check if its being saved to game territories
                 territory claim=game.getTerritories().get(territoryNum);
                 claimed++;
@@ -234,7 +234,7 @@ public class MainBot  {
             game.getTerritories().get(territoryNum).addArmies(numArmies);
             printTerritories();
 
-            if(CreditMgr.undo(game)) {
+            if(CreditMgr.undo(game,myBot)) {
                 game.getTerritories().get(territoryNum).deleteArmy(numArmies);
                 i--;
             }
@@ -336,7 +336,7 @@ public class MainBot  {
             t1Wins=true;
         }
 
-        if(!(CreditMgr.undo(game))) {
+        if(!(CreditMgr.undo(game,myBot))) {
 
             t1.deleteArmy(t1Deaths);
             t2.deleteArmy(t2Deaths);
@@ -389,7 +389,7 @@ public class MainBot  {
             printTerritories();
 
 
-            if(CreditMgr.undo(game)) {
+            if(CreditMgr.undo(game,myBot)) {
                 moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
                 printTerritories();
             }
