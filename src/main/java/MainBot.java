@@ -15,8 +15,8 @@ import java.util.TimerTask;
 public class MainBot  {
     static Game game;
     static RiskBot myBot;
-    
-    
+
+
 
     static TimerTask task = new TimerTask()
     {
@@ -39,9 +39,9 @@ public class MainBot  {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-        
+
         game = new Game();
-        Scanner sc = new Scanner(System.in);
+
         int startingNum = 0;
 
         /*
@@ -58,8 +58,6 @@ public class MainBot  {
         myBot.sendMessage("\nHow many players?");
         int numPlayers = getIntMessage(myBot);
         game.setNumPlayers(numPlayers);
-
-        getStringMessage(myBot);
 
         game.createPlayers();
 
@@ -176,7 +174,7 @@ public class MainBot  {
     }
 
     public static void claiming(){
-        Scanner sc = new Scanner(System.in);
+
         int claimed=0;
 
         while(game.currentPlayer().unplacedArmies()!=0){
@@ -187,8 +185,6 @@ public class MainBot  {
 
             //add if number is greater then 41 and if its not a number
             territoryNum=checkTerritory(territoryNum, claimed);
-
-            getStringMessage(myBot);
 
             if(!(CreditMgr.undo(game))){
                 //may cause issue, check if its being saved to game territories
@@ -211,7 +207,7 @@ public class MainBot  {
 
 
     public static void reEnforce( ){
-        Scanner sc = new Scanner(System.in);
+
         Player p1=game.currentPlayer();
 
         int armies= supportCount();
@@ -238,8 +234,6 @@ public class MainBot  {
             game.getTerritories().get(territoryNum).addArmies(numArmies);
             printTerritories();
 
-            getStringMessage(myBot);
-
             if(CreditMgr.undo(game)) {
                 game.getTerritories().get(territoryNum).deleteArmy(numArmies);
                 i--;
@@ -254,7 +248,7 @@ public class MainBot  {
 
     public static void attack(){
         printTerritories();
-        Scanner sc = new Scanner(System.in);
+
 
         String answer= "";
 
@@ -293,7 +287,6 @@ public class MainBot  {
             attacking(t1, t2, attackArmies, defendArmies, p2);
 
             printTerritories();
-            getStringMessage(myBot);
             myBot.sendMessage("\nWould you like to attack again?(y/n)");
             answer= getStringMessage(myBot);
 
@@ -304,7 +297,7 @@ public class MainBot  {
 
     //needs to be cleaned more
     public static void attacking(territory t1, territory t2, int attackArmies, int defendArmies, Player p2){
-        Scanner sc = new Scanner(System.in);
+
         Player p1=game.currentPlayer();
         int t1Deaths=0;
         int t2Deaths=0;
@@ -374,7 +367,7 @@ public class MainBot  {
     public static void fortify(){
         ArrayList<Integer> movedTo= new ArrayList<>();
 
-        Scanner sc = new Scanner(System.in);
+
         myBot.sendMessage("\n"+game.currentPlayer().getName()+" you may now fortify you territories");
         String answer="";
 
@@ -394,8 +387,6 @@ public class MainBot  {
             }
             moveTroops(troops, game.territories.get(territoryNum), game.territories.get(territory2Num));
             printTerritories();
-            getStringMessage(myBot);
-
 
 
             if(CreditMgr.undo(game)) {
@@ -443,14 +434,13 @@ public class MainBot  {
     }
 
     public static int redeemCards(){
-        Scanner sc = new Scanner(System.in);
+
         int armies=0;
         Player p1=game.currentPlayer();
 
         myBot.sendMessage("\nInfantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
 
         if(p1.infantryCount>2){
-            getStringMessage(myBot);
             myBot.sendMessage("\nWould you like to redeem your infantry cards?(y/n)");
             String answer= getStringMessage(myBot);
             if(answer.equals("y")){
@@ -460,7 +450,6 @@ public class MainBot  {
         }
 
         if(p1.cavalryCount>2){
-            getStringMessage(myBot);
             myBot.sendMessage("\nWould you like to redeem your cavalry cards?(y/n)");
             String answer= getStringMessage(myBot);
             if(answer.equals("y")){
@@ -470,7 +459,6 @@ public class MainBot  {
         }
 
         if(p1.artilleryCount>2){
-            getStringMessage(myBot);
             myBot.sendMessage("\nWould you like to redeem your artillery cards?(y/n)");
             String answer= getStringMessage(myBot);
             if(answer.equals("y")){
@@ -484,7 +472,7 @@ public class MainBot  {
 
 
     public static int checkTerritory(int territoryNum, int claimed){
-        Scanner sc = new Scanner(System.in);
+
         while (claimed<42 && territoryTaken(territoryNum)||territoryTaken(territoryNum) && !(playersTerritory(territoryNum))) {
             if (territoryTaken(territoryNum) && !(playersTerritory(territoryNum))) {
                 myBot.sendMessage("Territory is already claimed by other player, please choose a different territory");
@@ -499,7 +487,6 @@ public class MainBot  {
     }
 
     public static int attackers(int territoryNum, territory t1){
-        Scanner sc= new Scanner(System.in);
         if(t1.numArmies()>3){
             myBot.sendMessage("\nHow many armies would you like to attack with?(max 3)");
         }
@@ -523,8 +510,6 @@ public class MainBot  {
 
     public static int defenders(int attackNum, territory t2, Player p2){
         int defendArmies=0;
-        Scanner sc= new Scanner(System.in);
-
         if(t2.numArmies()>1){
             myBot.sendMessage("\n"+p2.getName()+" how many armies would you like to defend with?(max 2)");
             defendArmies= getIntMessage(myBot);
@@ -575,7 +560,7 @@ public class MainBot  {
     }
 
     public static int chooseMovers(ArrayList<Integer> movedTo){
-        Scanner sc = new Scanner(System.in);
+        
         myBot.sendMessage("\nChoose territory to move troops from");
         int territoryNum= getIntMessage(myBot);
 
@@ -592,7 +577,7 @@ public class MainBot  {
     }
 
     public static int movingTo(int territoryNum){
-        Scanner sc = new Scanner(System.in);
+        
         myBot.sendMessage("\nChoose territory to move them too");
         int territory2Num= getIntMessage(myBot);
 
@@ -634,7 +619,7 @@ public class MainBot  {
     }
 
     public static void check(){
-        Scanner sc = new Scanner(System.in);
+        
         if(game.stage==1){
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
