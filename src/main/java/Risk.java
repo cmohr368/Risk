@@ -15,6 +15,7 @@ import java.util.TimerTask;
 
 public class Risk  {
     static Game game;
+    static RiskBot myBot;
 
     static TimerTask task = new TimerTask()
     {
@@ -28,22 +29,12 @@ public class Risk  {
     };
 
     public static void main(String[] args) {
-        ApiContextInitializer.init();
-        TelegramBotsApi botsApi = new TelegramBotsApi();
-        RiskBot myBot = new RiskBot();
-
-        try {
-            botsApi.registerBot(myBot);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-
-        game = new Game();
-
         System.out.println("WELCOME TO RISK");
         playing();
     }
     public static void playing(){
+        game = new Game();
+
         Scanner sc = new Scanner(System.in);
         int startingNum = 0;
 

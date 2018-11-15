@@ -14,6 +14,9 @@ import java.util.TimerTask;
 
 public class MainBot  {
     static Game game;
+    static RiskBot myBot;
+    
+    
 
     static TimerTask task = new TimerTask()
     {
@@ -27,13 +30,23 @@ public class MainBot  {
     };
 
     public static void playing(){
+        ApiContextInitializer.init();
+        TelegramBotsApi botsApi = new TelegramBotsApi();
+        myBot = new RiskBot();
+
+        try {
+            botsApi.registerBot(myBot);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        
         game = new Game();
         Scanner sc = new Scanner(System.in);
         int startingNum = 0;
 
         /*
-        System.out.println("Would you like to load a game?(y/n)");
-        string load=sc.nextLine();
+        myBot.sendMessage("Would you like to load a game?(y/n)");
+        string load=getStringMessage(myBot);
 
         if(load.equals("y")){
             load(Game game)
@@ -42,20 +55,20 @@ public class MainBot  {
 
         //else{
         game.createTerritories();
-        System.out.println("\nHow many players?");
-        int numPlayers = sc.nextInt();
+        myBot.sendMessage("\nHow many players?");
+        int numPlayers = getIntMessage(myBot);
         game.setNumPlayers(numPlayers);
 
-        sc.nextLine();
+        getStringMessage(myBot);
 
         game.createPlayers();
 
         startingNum = chooseFirstPlayer(game.getNumPlayers(), game.getPlayers());
         game.setPlayerTurn(startingNum);
 
-        System.out.println("\n" + game.currentPlayer().getName() + " will start");
-        System.out.println("\nWould you like to auto assign the territories?(y/n)");
-        String answer = sc.nextLine();
+        myBot.sendMessage("\n" + game.currentPlayer().getName() + " will start");
+        myBot.sendMessage("\nWould you like to auto assign the territories?(y/n)");
+        String answer = getStringMessage(myBot);
 
         if (answer.equals("y")) {
             random();
@@ -75,7 +88,7 @@ public class MainBot  {
                 game.nextStage();
             }
             else if(game.stage==1){
-                System.out.println(game.currentPlayer().name+" it is now your turn");
+                myBot.sendMessage(game.currentPlayer().name+" it is now your turn");
                 CreditMgr.buying(game);
                 check();
             }
@@ -84,7 +97,7 @@ public class MainBot  {
             }
         }
         conquered();
-        System.out.println(game.currentPlayer().getName()+" WINS!!!");
+        myBot.sendMessage(game.currentPlayer().getName()+" WINS!!!");
     }
 
     public static void loadGame(Game load){game= load;}
@@ -97,7 +110,7 @@ public class MainBot  {
 
         for(int i=0; i<numPlayers;i++){
             int temp=(int)(Math.random()*6)+1;
-            System.out.println(players.get(i).getName()+" rolled a "+temp);
+            myBot.sendMessage(players.get(i).getName()+" rolled a "+temp);
             if(temp>max){
                 max=temp;
                 startingNum.clear();
@@ -114,7 +127,7 @@ public class MainBot  {
                 ties.add(players.get(startingNum.get(x)));
                 System.out.print(players.get(startingNum.get(x)).getName()+" | ");
             }
-            System.out.println("tied and will reroll");
+            myBot.sendMessage("tied and will reroll");
             int tempNum= chooseFirstPlayer(ties.size(),ties);
             tempNum=startingNum.get(tempNum);
             startingNum.clear();
@@ -169,13 +182,13 @@ public class MainBot  {
         while(game.currentPlayer().unplacedArmies()!=0){
 
             printTerritories();
-            System.out.println("\n"+game.currentPlayer().getName()+" place an army: (armies left "+game.currentPlayer().unplacedArmies()+")");
-            int territoryNum=sc.nextInt();
+            myBot.sendMessage("\n"+game.currentPlayer().getName()+" place an army: (armies left "+game.currentPlayer().unplacedArmies()+")");
+            int territoryNum=getIntMessage(myBot);
 
             //add if number is greater then 41 and if its not a number
             territoryNum=checkTerritory(territoryNum, claimed);
 
-            sc.nextLine();
+            getStringMessage(myBot);
 
             if(!(CreditMgr.undo(game))){
                 //may cause issue, check if its being saved to game territories
@@ -204,28 +217,28 @@ public class MainBot  {
         int armies= supportCount();
         armies+=redeemCards();
 
-        System.out.println("\n"+p1.getName()+" you may place "+armies+" armies");
+        myBot.sendMessage("\n"+p1.getName()+" you may place "+armies+" armies");
         for(int i=0;i<armies;i++){
-            System.out.println("\nChoose a territory to place armies on ("+(armies-i)+" left)");
-            int territoryNum=sc.nextInt();
+            myBot.sendMessage("\nChoose a territory to place armies on ("+(armies-i)+" left)");
+            int territoryNum=getIntMessage(myBot);
 
             while(!playersTerritory(territoryNum)){
-                System.out.println("\nTerritory is already claimed by other player, please choose a different territory");
-                territoryNum=sc.nextInt();
+                myBot.sendMessage("\nTerritory is already claimed by other player, please choose a different territory");
+                territoryNum=getIntMessage(myBot);
             }
 
-            System.out.println("\nHow many armies would you like to add (max "+(armies-i)+")");
-            int numArmies=sc.nextInt();
+            myBot.sendMessage("\nHow many armies would you like to add (max "+(armies-i)+")");
+            int numArmies=getIntMessage(myBot);
             while(numArmies>armies-i) {
-                System.out.println("\nChoose a number less then " + (armies - i));
-                numArmies = sc.nextInt();
+                myBot.sendMessage("\nChoose a number less then " + (armies - i));
+                numArmies = getIntMessage(myBot);
             }
 
 
             game.getTerritories().get(territoryNum).addArmies(numArmies);
             printTerritories();
 
-            sc.nextLine();
+            getStringMessage(myBot);
 
             if(CreditMgr.undo(game)) {
                 game.getTerritories().get(territoryNum).deleteArmy(numArmies);
@@ -247,25 +260,25 @@ public class MainBot  {
 
 
         do{
-            System.out.println("\nChoose territory to attack with");
-            int territoryNum= sc.nextInt();
+            myBot.sendMessage("\nChoose territory to attack with");
+            int territoryNum= getIntMessage(myBot);
 
             while(!playersTerritory(territoryNum)){
-                System.out.println("\nPlease choose your own territory");
-                territoryNum= sc.nextInt();
+                myBot.sendMessage("\nPlease choose your own territory");
+                territoryNum= getIntMessage(myBot);
             }
 
             //add cant attack your own territory
-            System.out.println("\nChoose territory to attack");
-            int attackNum= sc.nextInt();
+            myBot.sendMessage("\nChoose territory to attack");
+            int attackNum= getIntMessage(myBot);
             while(!areNeighbors(territoryNum,attackNum)||playersTerritory(attackNum)){
                 if(!areNeighbors(territoryNum,attackNum)){
-                    System.out.println("\nYou can not reach that territory, choose another");
+                    myBot.sendMessage("\nYou can not reach that territory, choose another");
                 }
                 else if(playersTerritory(attackNum)){
-                    System.out.println("\nYou can't attack your own territory, choose another");
+                    myBot.sendMessage("\nYou can't attack your own territory, choose another");
                 }
-                attackNum= sc.nextInt();
+                attackNum= getIntMessage(myBot);
             }
 
 
@@ -280,9 +293,9 @@ public class MainBot  {
             attacking(t1, t2, attackArmies, defendArmies, p2);
 
             printTerritories();
-            sc.nextLine();
-            System.out.println("\nWould you like to attack again?(y/n)");
-            answer= sc.nextLine();
+            getStringMessage(myBot);
+            myBot.sendMessage("\nWould you like to attack again?(y/n)");
+            answer= getStringMessage(myBot);
 
         }while(answer.equals("y"));
         game.nextStage();
@@ -323,8 +336,8 @@ public class MainBot  {
             }
         }
 
-        System.out.println("\n"+p1.getName()+" lost "+t1Deaths+" armies");
-        System.out.println(p2.getName()+" lost "+t2Deaths+" armies");
+        myBot.sendMessage("\n"+p1.getName()+" lost "+t1Deaths+" armies");
+        myBot.sendMessage(p2.getName()+" lost "+t2Deaths+" armies");
 
         if(t2.numArmies()==t2Deaths){
             t1Wins=true;
@@ -336,12 +349,12 @@ public class MainBot  {
             t2.deleteArmy(t2Deaths);
 
             if (t1Wins) {
-                System.out.println(p1.getName() + " won the battle and gained the territory!");
-                System.out.println("How many armies would you like to send to " + t2.getName() + "(max " + (t1.armies - 1) + ")");
-                int armiesMoving = sc.nextInt();
+                myBot.sendMessage(p1.getName() + " won the battle and gained the territory!");
+                myBot.sendMessage("How many armies would you like to send to " + t2.getName() + "(max " + (t1.armies - 1) + ")");
+                int armiesMoving = getIntMessage(myBot);
                 while (armiesMoving > t1.armies - 1) {
-                    System.out.println("\nYou can enter a max of " + (t1.armies - 1) + " troops, try again");
-                    armiesMoving = sc.nextInt();
+                    myBot.sendMessage("\nYou can enter a max of " + (t1.armies - 1) + " troops, try again");
+                    armiesMoving = getIntMessage(myBot);
                 }
 
                 moveTroops(armiesMoving, t1, t2);
@@ -362,7 +375,7 @@ public class MainBot  {
         ArrayList<Integer> movedTo= new ArrayList<>();
 
         Scanner sc = new Scanner(System.in);
-        System.out.println("\n"+game.currentPlayer().getName()+" you may now fortify you territories");
+        myBot.sendMessage("\n"+game.currentPlayer().getName()+" you may now fortify you territories");
         String answer="";
 
         do{
@@ -371,17 +384,17 @@ public class MainBot  {
 
             movedTo.add(territory2Num);
 
-            System.out.println("\nHow many troops would you like to move?");
-            int troops= sc.nextInt();
+            myBot.sendMessage("\nHow many troops would you like to move?");
+            int troops= getIntMessage(myBot);
             if(!(troops<game.territories.get(territoryNum).numArmies())){
                 while(!(troops<game.territories.get(territoryNum).numArmies())){
-                    System.out.println("\nYou do not have enough troops to do that, enter another number");
-                    troops= sc.nextInt();
+                    myBot.sendMessage("\nYou do not have enough troops to do that, enter another number");
+                    troops= getIntMessage(myBot);
                 }
             }
             moveTroops(troops, game.territories.get(territoryNum), game.territories.get(territory2Num));
             printTerritories();
-            sc.nextLine();
+            getStringMessage(myBot);
 
 
 
@@ -390,8 +403,8 @@ public class MainBot  {
                 printTerritories();
             }
 
-            System.out.println("\nWould you like to move more troops?(y/n)");
-            answer= sc.nextLine();
+            myBot.sendMessage("\nWould you like to move more troops?(y/n)");
+            answer= getStringMessage(myBot);
         }while(answer.equals("y"));
         game.nextStage();
         game.nextPlayer();
@@ -434,12 +447,12 @@ public class MainBot  {
         int armies=0;
         Player p1=game.currentPlayer();
 
-        System.out.println("\nInfantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
+        myBot.sendMessage("\nInfantry Cards - "+p1.infantryCount+" | Cavalry Cards - "+p1.cavalryCount+" | Artillery Cards - "+p1.artilleryCount);
 
         if(p1.infantryCount>2){
-            sc.nextLine();
-            System.out.println("\nWould you like to redeem your infantry cards?(y/n)");
-            String answer= sc.nextLine();
+            getStringMessage(myBot);
+            myBot.sendMessage("\nWould you like to redeem your infantry cards?(y/n)");
+            String answer= getStringMessage(myBot);
             if(answer.equals("y")){
                 armies+=3;
                 p1.useInfantry();
@@ -447,9 +460,9 @@ public class MainBot  {
         }
 
         if(p1.cavalryCount>2){
-            sc.nextLine();
-            System.out.println("\nWould you like to redeem your cavalry cards?(y/n)");
-            String answer= sc.nextLine();
+            getStringMessage(myBot);
+            myBot.sendMessage("\nWould you like to redeem your cavalry cards?(y/n)");
+            String answer= getStringMessage(myBot);
             if(answer.equals("y")){
                 armies+=15;
                 p1.useCavalry();
@@ -457,9 +470,9 @@ public class MainBot  {
         }
 
         if(p1.artilleryCount>2){
-            sc.nextLine();
-            System.out.println("\nWould you like to redeem your artillery cards?(y/n)");
-            String answer= sc.nextLine();
+            getStringMessage(myBot);
+            myBot.sendMessage("\nWould you like to redeem your artillery cards?(y/n)");
+            String answer= getStringMessage(myBot);
             if(answer.equals("y")){
                 armies+=30;
                 p1.useArtillery();
@@ -474,12 +487,12 @@ public class MainBot  {
         Scanner sc = new Scanner(System.in);
         while (claimed<42 && territoryTaken(territoryNum)||territoryTaken(territoryNum) && !(playersTerritory(territoryNum))) {
             if (territoryTaken(territoryNum) && !(playersTerritory(territoryNum))) {
-                System.out.println("Territory is already claimed by other player, please choose a different territory");
+                myBot.sendMessage("Territory is already claimed by other player, please choose a different territory");
             }
             else if (claimed<42 && territoryTaken(territoryNum)) {
-                System.out.println("All territories must be claimed before re-enforements can be add, please choose a different territory");
+                myBot.sendMessage("All territories must be claimed before re-enforements can be add, please choose a different territory");
             }
-            territoryNum = sc.nextInt();
+            territoryNum = getIntMessage(myBot);
         }
 
         return territoryNum;
@@ -488,21 +501,21 @@ public class MainBot  {
     public static int attackers(int territoryNum, territory t1){
         Scanner sc= new Scanner(System.in);
         if(t1.numArmies()>3){
-            System.out.println("\nHow many armies would you like to attack with?(max 3)");
+            myBot.sendMessage("\nHow many armies would you like to attack with?(max 3)");
         }
         else{
-            System.out.println("\nHow many armies would you like to attack with?(max "+(t1.numArmies()-1)+")");
+            myBot.sendMessage("\nHow many armies would you like to attack with?(max "+(t1.numArmies()-1)+")");
         }
-        int attackArmies= sc.nextInt();
+        int attackArmies= getIntMessage(myBot);
         if(attackArmies>3&&attackArmies>(t1.numArmies()-1)){
             while(attackArmies>3&&attackArmies>(t1.numArmies()-1)){
                 if(t1.numArmies()>3){
-                    System.out.println("\nEnter 3 or less");
+                    myBot.sendMessage("\nEnter 3 or less");
                 }
                 else{
-                    System.out.println("\nEnter a number less then "+(t1.numArmies()));
+                    myBot.sendMessage("\nEnter a number less then "+(t1.numArmies()));
                 }
-                attackArmies= sc.nextInt();
+                attackArmies= getIntMessage(myBot);
             }
         }
         return attackArmies;
@@ -513,18 +526,18 @@ public class MainBot  {
         Scanner sc= new Scanner(System.in);
 
         if(t2.numArmies()>1){
-            System.out.println("\n"+p2.getName()+" how many armies would you like to defend with?(max 2)");
-            defendArmies= sc.nextInt();
+            myBot.sendMessage("\n"+p2.getName()+" how many armies would you like to defend with?(max 2)");
+            defendArmies= getIntMessage(myBot);
 
             while(defendArmies>2){
-                System.out.println("\n"+p2.getName()+" enter 2 or less");
-                defendArmies= sc.nextInt();
+                myBot.sendMessage("\n"+p2.getName()+" enter 2 or less");
+                defendArmies= getIntMessage(myBot);
             }
 
         }
 
         else{
-            System.out.println("\n"+p2.getName()+" you can defend with only one army");
+            myBot.sendMessage("\n"+p2.getName()+" you can defend with only one army");
             defendArmies=1;
         }
 
@@ -548,49 +561,49 @@ public class MainBot  {
     public static void gainCard(Player p1){
         int card = game.deck.getCard();
         if (card == 1) {
-            System.out.println("\n" + p1.getName() + " gained an infantry card");
+            myBot.sendMessage("\n" + p1.getName() + " gained an infantry card");
         }
 
         if (card == 2) {
-            System.out.println("\n" + p1.getName() + " gained an cavalry card");
+            myBot.sendMessage("\n" + p1.getName() + " gained an cavalry card");
         }
 
         if (card == 3) {
-            System.out.println("\n" + p1.getName() + " gained an artillery card");
+            myBot.sendMessage("\n" + p1.getName() + " gained an artillery card");
         }
         p1.addCard(card);
     }
 
     public static int chooseMovers(ArrayList<Integer> movedTo){
         Scanner sc = new Scanner(System.in);
-        System.out.println("\nChoose territory to move troops from");
-        int territoryNum= sc.nextInt();
+        myBot.sendMessage("\nChoose territory to move troops from");
+        int territoryNum= getIntMessage(myBot);
 
         while(!playersTerritory(territoryNum)&& movedTo.contains(territoryNum)){
             if(!playersTerritory(territoryNum)) {
-                System.out.println("\nPlease choose your own territory");
+                myBot.sendMessage("\nPlease choose your own territory");
             }
             else {
-                System.out.println("\nYou cannot move troops from a territory you already moved troops too, enter another number");
+                myBot.sendMessage("\nYou cannot move troops from a territory you already moved troops too, enter another number");
             }
-            territoryNum= sc.nextInt();
+            territoryNum= getIntMessage(myBot);
         }
         return territoryNum;
     }
 
     public static int movingTo(int territoryNum){
         Scanner sc = new Scanner(System.in);
-        System.out.println("\nChoose territory to move them too");
-        int territory2Num= sc.nextInt();
+        myBot.sendMessage("\nChoose territory to move them too");
+        int territory2Num= getIntMessage(myBot);
 
         while(!areNeighbors(territoryNum,territory2Num)&&!playersTerritory(territory2Num)){
             if(!areNeighbors(territoryNum,territory2Num)){
-                System.out.println("\nYou can not reach that territory, choose another");
+                myBot.sendMessage("\nYou can not reach that territory, choose another");
             }
             else if(!playersTerritory(territory2Num)){
-                System.out.println("\nYou must move them to a territory you own, choose another");
+                myBot.sendMessage("\nYou must move them to a territory you own, choose another");
             }
-            territory2Num= sc.nextInt();
+            territory2Num= getIntMessage(myBot);
         }
         return territory2Num;
     }
@@ -607,7 +620,7 @@ public class MainBot  {
         int i=0;
         while(i<game.getTerritories().size()-1){
             continent=game.getTerritories().get(i).getContinent();
-            System.out.println("\n"+continent+":");
+            myBot.sendMessage("\n"+continent+":");
             do{
                 if(!game.getTerritories().get(i).isOccupied()){
                     System.out.print(i+". "+game.getTerritories().get(i).getName()+ " | ");
@@ -625,8 +638,8 @@ public class MainBot  {
         if(game.stage==1){
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
-            System.out.println("Do you want to Renforce?");
-            game.input=sc.nextLine();
+            myBot.sendMessage("Do you want to Renforce?");
+            game.input=getStringMessage(myBot);
             timer.cancel();
             if(game.input.equals("y")) {
                 reEnforce();
@@ -636,8 +649,8 @@ public class MainBot  {
         else if(game.stage==2) {
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
-            System.out.println("Do you want to Attack?");
-            game.input=sc.nextLine();
+            myBot.sendMessage("Do you want to Attack?");
+            game.input=getStringMessage(myBot);
             timer.cancel();
             if(game.input.equals("y")) {
                 attack();
@@ -647,8 +660,8 @@ public class MainBot  {
         else if(game.stage==3){
             Timer timer = new Timer();
             timer.schedule( task, 30*1000 );
-            System.out.println("Do you want to Fortify?");
-            game.input=sc.nextLine();
+            myBot.sendMessage("Do you want to Fortify?");
+            game.input=getStringMessage(myBot);
             timer.cancel();
             if(game.input.equals("y")) {
                 fortify();
@@ -697,7 +710,7 @@ public class MainBot  {
         System.out.print(game.currentPlayer().getName()+" took to long.");
         game.nextPlayer();
         game.stage=1;
-        System.out.println(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
+        myBot.sendMessage(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
     }
 
     public static String getStringMessage(RiskBot bot){
