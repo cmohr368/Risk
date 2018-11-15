@@ -1,4 +1,12 @@
 
+import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
+import org.telegram.telegrambots.meta.ApiContext;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.BotOptions;
+import org.telegram.telegrambots.meta.generics.LongPollingBot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -6,6 +14,16 @@ import java.util.Scanner;
 public class Risk  {
     static Game game;
     public static void main(String[] args) {
+        ApiContextInitializer.init();
+        TelegramBotsApi botsApi = new TelegramBotsApi();
+        DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
+
+        try{
+            botsApi.registerBot(new RiskBot(botOptions));
+        } catch(TelegramApiException e){
+            e.printStackTrace();
+        }
+
         game=new Game();
 
         int startingNum=0;
