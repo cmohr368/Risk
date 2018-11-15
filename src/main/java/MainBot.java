@@ -601,17 +601,17 @@ public class MainBot  {
     public static void printTerritories(){
         String continent;
 
-        System.out.print("\nTerritories:");
+        myBot.sendMessage("\nTerritories:");
         int i=0;
         while(i<game.getTerritories().size()-1){
             continent=game.getTerritories().get(i).getContinent();
             myBot.sendMessage("\n"+continent+":");
             do{
                 if(!game.getTerritories().get(i).isOccupied()){
-                    System.out.print(i+". "+game.getTerritories().get(i).getName()+ " | ");
+                    myBot.sendMessage(i+". "+game.getTerritories().get(i).getName()+ " | ");
                 }
                 else if(game.getTerritories().get(i).isOccupied()){
-                    System.out.print(i+". "+game.getTerritories().get(i).getName()+ " - "+game.getPlayers().get(game.getTerritories().get(i).getPlayerNum()).getName() +"("+game.territories.get(i).numArmies()+") | ");
+                    myBot.sendMessage(i+". "+game.getTerritories().get(i).getName()+ " - "+game.getPlayers().get(game.getTerritories().get(i).getPlayerNum()).getName() +"("+game.territories.get(i).numArmies()+") | ");
                 }
                 i++;
             }while(i<game.getTerritories().size()&&continent==game.getTerritories().get(i).getContinent());
@@ -692,7 +692,7 @@ public class MainBot  {
     }
 
     public static void timeOut(){
-        System.out.print(game.currentPlayer().getName()+" took to long.");
+        myBot.sendMessage(game.currentPlayer().getName()+" took to long.");
         game.nextPlayer();
         game.stage=1;
         myBot.sendMessage(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");

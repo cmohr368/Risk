@@ -29,8 +29,17 @@ public class Risk  {
     };
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         System.out.println("WELCOME TO RISK");
-        playing();
+
+        System.out.println("Do you want to play through a Telegram Bot? (y/n)");
+        String answer = sc.nextLine();
+        if(answer.equals("y")){
+            MainBot.playing();
+        }
+        else if(answer.equals("n")){
+            playing();
+        }
     }
     public static void playing(){
         game = new Game();

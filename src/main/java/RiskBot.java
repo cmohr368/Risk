@@ -33,7 +33,7 @@ public class RiskBot extends TelegramLongPollingBot{
     @Override
     public String getBotToken(){
         //TODO
-        return "aaaaaaaaa";
+        return "726796620:AAGdU-upSVgJHJaQa6jmqtTXMUxUAitbTkg";
     }
 
     public String getMessage(){
