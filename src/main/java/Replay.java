@@ -52,5 +52,8 @@ public class Replay {
             System.exit(1);
         }
     }
+    public void shutdown(){
+        s3.shutdown();
+    }
 
 }
