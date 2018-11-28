@@ -19,17 +19,17 @@ public class RiskBotTests {
         assertEquals(riskBot.getBotToken(), botTokenTest);
     }
 
-    @Test
-    public void sendMessageTest(){
-        RiskBot riskbot= new RiskBot();
-        Boolean boolTest= false;
-        String test= "test";
-        if(boolTest== false){
-            riskbot.sendMessage(test);
-            boolTest= true;
-        }
-        assertTrue(boolTest);
-    }
+//    @Test
+//    public void sendMessageTest(){
+//        RiskBot riskbot= new RiskBot();
+//        Boolean boolTest= false;
+//        String test= "test";
+//        if(boolTest== false){
+//            riskbot.sendMessage(test);
+//            boolTest= true;
+//        }
+//        assertTrue(boolTest);
+//    }
 
     @Test
     public void clearMessageTest(){
