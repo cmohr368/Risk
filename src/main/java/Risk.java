@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotOptions;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -29,21 +30,31 @@ public class Risk  {
     };
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("WELCOME TO RISK");
+        try {
+            Replay amazonS3 = new Replay();
+            Logger logger = new Logger();
+            Scanner sc = new Scanner(System.in);
+            System.out.println("WELCOME TO RISK");
 
-        System.out.println("Do you want to play through a Telegram Bot? (y/n)");
-        String answer = sc.nextLine();
-        if(answer.equals("y")){
-            MainBot.playing();
+            System.out.println("Do you want to play through a Telegram Bot? (y/n)");
+            String answer = sc.nextLine();
+            /*amazonS3.uploadFile(logger.getLog());
+            logger.close();
+            amazonS3.shutdown();*/
+            if (answer.equals("y")) {
+                MainBot.playing();
+            } else if (answer.equals("n")) {
+                playing();
+            }
+            amazonS3.uploadFile(logger.getLog());
+            logger.close();
+            amazonS3.shutdown();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
         }
-        else if(answer.equals("n")){
-            playing();
-        }
+
     }
     public static void playing(){
-        game = new Game();
-
         Scanner sc = new Scanner(System.in);
         int startingNum = 0;
 
@@ -57,6 +68,8 @@ public class Risk  {
         */
 
         //else{
+            game = new Game();
+
             game.createTerritories();
             System.out.println("\nHow many players?");
             int numPlayers = sc.nextInt();

@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
-import java.io.File;
+import java.io.*;
 import java.util.Date;
 import java.util.Properties;
 
@@ -15,18 +15,26 @@ public class Replay {
     String bucketName;
     String fileKey;
     Properties properties = new Properties();
+    InputStream input = null;
 
     public Replay() {
-        String accessKey = properties.getProperty("AWS.accessKey");
-        String secretKey = properties.getProperty("AWS.secretKey");
-        awsCreds = new BasicAWSCredentials(accessKey,secretKey);
-        s3 = AmazonS3ClientBuilder.standard()
-                .withRegion("us-east-2")
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .build();
-        bucketName = "riskprojectreplay";
-        Date currentDate = new Date();
-        fileKey = currentDate.toString();
+        try {
+            input = new FileInputStream("src/main/java/secret_FruitCakes.properties");
+            properties.load(input);
+            String accessKey = properties.getProperty("AWS.accessKey");
+            String secretKey = properties.getProperty("AWS.secretKey");
+            awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+            s3 = AmazonS3ClientBuilder.standard()
+                    .withRegion("us-east-2")
+                    .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                    .build();
+            bucketName = "riskprojectreplay";
+            Date currentDate = new Date();
+            fileKey = currentDate.toString();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
     public String getBucketName(){
         return bucketName;

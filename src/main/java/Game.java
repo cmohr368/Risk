@@ -25,7 +25,7 @@ public class Game {
         input="";
 
         //tweet = new TwitterController();
-        //tweet.connectTwitter(tweet.getKeys());
+
     }
     public void setNumPlayers(int numPlayers){this.numPlayers=numPlayers;}
 
@@ -100,11 +100,11 @@ public class Game {
     }
 
     public void post(){
-        String tweet="";
+        String status="";
         for(int i=0; i<players.size();i++){
-            tweet+=players.get(i).name+" has conquered "+players.get(i).territoriesConquered+" territories/n";
+            status+=players.get(i).name+" has conquered "+players.get(i).territoriesConquered+" territories/n";
         }
-        //game.TwitterController.postTweet(tweet);
+        //tweet.postTweet(status);
     }
 
     public void createTerritories(){

@@ -45,6 +45,7 @@
     <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+        <dependency.locations.enabled>false</dependency.locations.enabled>
   </properties>
 
     <build>
@@ -72,7 +73,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <doclet><org class="um"></org>lgraph.doclet.UmlGraphDoc</doclet>
 
                     <docletPath>/path/to/UmlGraph.jar</docletPath>
                     <docletArtifact>
@@ -83,7 +84,15 @@
                     <useStandardDocletOptions>true</useStandardDocletOptions>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
         </plugins>
+
+
     </build>
 
 

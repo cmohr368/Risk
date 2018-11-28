@@ -12,7 +12,7 @@ public class Logger {
         tee = new FilePrintStream(fileOutput, System.out);
         System.setOut(tee);
     }
-    public void closeLogger(){
+    public void close(){
         tee.close();
     }
     public File getLog(){
