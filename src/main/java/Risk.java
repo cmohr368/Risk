@@ -361,6 +361,7 @@ public class Risk  {
 
                 gainCard(p1);
             }
+            conquered();
         }
     }
 

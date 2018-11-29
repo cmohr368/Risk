@@ -12,7 +12,7 @@ public class Game {
     int playerTurn;
     int stage;
     String input;
-    //TwitterController tweet;
+    TwitterController tweet;
 
     Game(){
         stage=0;
@@ -24,7 +24,7 @@ public class Game {
         players=new ArrayList<>();
         input="";
 
-        //tweet = new TwitterController();
+        tweet = new TwitterController();
 
     }
     public void setNumPlayers(int numPlayers){this.numPlayers=numPlayers;}
@@ -104,7 +104,7 @@ public class Game {
         for(int i=0; i<players.size();i++){
             status+=players.get(i).name+" has conquered "+players.get(i).territoriesConquered+" territories/n";
         }
-        //tweet.postTweet(status);
+        tweet.postTweet(status);
     }
 
     public void createTerritories(){
