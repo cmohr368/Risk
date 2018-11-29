@@ -206,22 +206,21 @@ public class Risk  {
 
             sc.nextLine();
 
-            if(!(CreditMgr.undo(game))){
-                //may cause issue, check if its being saved to game territories
-                territory claim=game.getTerritories().get(territoryNum);
-                claimed++;
-                claim.addArmy();
-                game.currentPlayer().placeArmy();
+            //may cause issue, check if its being saved to game territories
+            territory claim=game.getTerritories().get(territoryNum);
+            claimed++;
+            claim.addArmy();
+            game.currentPlayer().placeArmy();
 
-                if (!claim.isOccupied()) {
-                    claim.occupy();
-                    claim.setPlayerNum(game.getPlayerTurn());
-                    claim.setPlayerName(game.players.get(game.getPlayerTurn()).getName());
-                    game.currentPlayer().addTerritory(claim);
-
-                }
-                game.nextPlayer();
+            if (!claim.isOccupied()) {
+                claim.occupy();
+                claim.setPlayerNum(game.getPlayerTurn());
+                claim.setPlayerName(game.players.get(game.getPlayerTurn()).getName());
+                game.currentPlayer().addTerritory(claim);
             }
+
+            game.nextPlayer();
+
          }
     }
 
@@ -256,14 +255,7 @@ public class Risk  {
 
             sc.nextLine();
 
-            if(CreditMgr.undo(game)) {
-                game.getTerritories().get(territoryNum).deleteArmy(numArmies);
-                i--;
-            }
-            else{
-                i+=numArmies;
-            }
-
+            i-=undoReEnforce(territoryNum, numArmies);//undo
         }
         game.nextStage();
     }
@@ -359,11 +351,10 @@ public class Risk  {
             t1Wins=true;
         }
 
-        if(!(CreditMgr.undo(game))) {
-
-            t1.deleteArmy(t1Deaths);
-            t2.deleteArmy(t2Deaths);
-
+        //
+        t1.deleteArmy(t1Deaths);
+        t2.deleteArmy(t2Deaths);
+        if(!undoAttack(t1, t2, t1Deaths, t2Deaths)) {//undo
             if (t1Wins) {
                 System.out.println(p1.getName() + " won the battle and gained the territory!");
                 System.out.println("How many armies would you like to send to " + t2.getName() + "(max " + (t1.armies - 1) + ")");
@@ -372,7 +363,6 @@ public class Risk  {
                     System.out.println("\nYou can enter a max of " + (t1.armies - 1) + " troops, try again");
                     armiesMoving = sc.nextInt();
                 }
-
                 moveTroops(armiesMoving, t1, t2);
                 t2.setPlayerNum(game.getPlayerTurn());
                 t2.setPlayerName(game.players.get(game.getPlayerTurn()).getName());
@@ -412,12 +402,7 @@ public class Risk  {
             printTerritories();
             sc.nextLine();
 
-
-
-            if(CreditMgr.undo(game)) {
-                moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
-                printTerritories();
-            }
+            undoFortify(troops, territory2Num, territoryNum);//undo
 
             System.out.println("\nWould you like to move more troops?(y/n)");
             answer= sc.nextLine();
@@ -651,40 +636,69 @@ public class Risk  {
 
     public static void check(){
         Scanner sc = new Scanner(System.in);
+        Timer timer = new Timer();
         if(game.stage==1){
-            Timer timer = new Timer();
-            timer.schedule( task, 30*1000 );
-            System.out.println("Do you want to Renforce?");
+            //timer.schedule( task, 30*1000 );
+            System.out.println("\nDo you want to Renforce?");
             game.input=sc.nextLine();
-            timer.cancel();
+            //timer.cancel();
             if(game.input.equals("y")) {
                 reEnforce();
             }
+            else{game.nextStage();}
             game.input="";
         }
         else if(game.stage==2) {
-            Timer timer = new Timer();
-            timer.schedule( task, 30*1000 );
-            System.out.println("Do you want to Attack?");
+            //timer.schedule( task, 30*1000 );
+            System.out.println("\nDo you want to Attack?");
             game.input=sc.nextLine();
-            timer.cancel();
+            //timer.cancel();
             if(game.input.equals("y")) {
                 attack();
             }
+            else{game.nextStage();}
+
             game.input="";
         }
         else if(game.stage==3){
-            Timer timer = new Timer();
-            timer.schedule( task, 30*1000 );
-            System.out.println("Do you want to Fortify?");
+            //timer.schedule( task, 30*1000 );
+            System.out.println("\nDo you want to Fortify?");
             game.input=sc.nextLine();
-            timer.cancel();
+            //timer.cancel();
             if(game.input.equals("y")) {
                 fortify();
             }
+            else{game.nextStage();game.nextPlayer();}
+
             game.input="";
         }
     }
+
+    public static int undoReEnforce(int territoryNum, int numArmies){
+        if(CreditMgr.undo(game)) {
+            game.getTerritories().get(territoryNum).deleteArmy(numArmies);
+            return 1;
+        }
+        return -numArmies;
+    }
+
+    public static boolean undoAttack(territory t1, territory t2 ,int t1Deaths, int t2Deaths){
+        if(CreditMgr.undo(game)){
+            t1.addArmies(t1Deaths);
+            t2.addArmies(t2Deaths);
+            return true;
+        }
+        return false;
+    }
+
+    public static void undoFortify(int troops, int territory2Num, int territoryNum){
+        if(CreditMgr.undo(game)) {
+            moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
+            printTerritories();
+        }
+    }
+
+
 
     public static void timeOut(){
         System.out.print(game.currentPlayer().getName()+" took to long.");
