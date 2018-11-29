@@ -105,7 +105,7 @@ public class Risk  {
             }
             else if(game.stage==1){
                 System.out.println(game.currentPlayer().name+" it is now your turn");
-                CreditMgr.buying(game);
+                creditUI();
                 check();
             }
             else{
@@ -698,12 +698,98 @@ public class Risk  {
         }
     }
 
-
-
     public static void timeOut(){
         System.out.print(game.currentPlayer().getName()+" took to long.");
         game.nextPlayer();
         game.stage=1;
         System.out.println(" Press Enter to start "+game.currentPlayer().getName()+"'s turn");
+    }
+    public static void creditUI(){
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Would you like to purchase credit? (y/n)");
+        String answer=sc.nextLine();
+        if(answer.equals("y")){
+            System.out.println("How much credit would you like to purchase? (100 credits per $1)");
+            int amount=sc.nextInt();
+            CreditMgr.buyCredit(game.currentPlayer().wallet, amount);
+        }
+
+        if(CreditMgr.checkCredit(game, 100)){
+            System.out.println("Would you like to purchase any cards?(y/n)");
+            answer=sc.nextLine();
+            if(answer.equals("y")){
+                buyCard();
+            }
+        }
+        if(CreditMgr.checkCredit(game, 100)){
+            System.out.println("Would you like to purchase any undos?(y/n)");
+            answer=sc.nextLine();
+            if(answer.equals("y")){
+                buyUndos();
+            }
+        }
+        if(CreditMgr.checkCredit(game, 0)){
+            System.out.println("Would you like to transfer any credit?(y/n)");
+            answer=sc.nextLine();
+            if(answer.equals("y")){
+                transferCredit();
+            }
+        }
+    }
+
+    public static void buyCard(){
+        Scanner sc = new Scanner(System.in);
+        boolean infantry=false;
+        boolean calvary=false;
+        boolean artillery=false;
+
+        if(CreditMgr.checkCredit(game, 100)){
+            System.out.println("\nWould you like to buy a infantry card?(y/n) (100 credits) "+CreditMgr.printCredit(game));
+            String answer= sc.nextLine();
+            if(answer.equals("y")){
+                infantry=true;
+            }
+        }
+
+        if(CreditMgr.checkCredit(game, 200)){
+            System.out.println("\nWould you like to buy a calvary card?(y/n) (200 credits) "+CreditMgr.printCredit(game));
+            String answer= sc.nextLine();
+            if(answer.equals("y")){
+                calvary=true;
+            }
+        }
+
+        if(CreditMgr.checkCredit(game, 300)){
+            System.out.println("\nWould you like to buy a artillery card?(y/n) (300 credits) "+CreditMgr.printCredit(game));
+            String answer= sc.nextLine();
+            if(answer.equals("y")){
+                artillery=true;
+            }
+        }
+        CreditMgr.buyCard(game, infantry, calvary, artillery);
+    }
+
+    public static void buyUndos(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("How many undos would you like to purchase(100 credits each) "+CreditMgr.printCredit(game));
+        int amount=sc.nextInt();
+        while(amount*100>game.currentPlayer().wallet.credit){
+            System.out.println("You can not purchase that much, try again");
+            amount=sc.nextInt();
+        }
+        CreditMgr.buyUndo(game, amount);
+    }
+
+    public static void transferCredit(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("What player would you like to send credit to?");
+        String name=sc.nextLine();
+
+        Player temp=CreditMgr.findPlayer(game, name);
+
+        System.out.println("How much credit would like to send? "+CreditMgr.printCredit(game));
+        int amount=sc.nextInt();
+        CreditMgr.transferCredit(game, temp, amount);
     }
 }
