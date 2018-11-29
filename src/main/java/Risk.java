@@ -675,7 +675,7 @@ public class Risk  {
     }
 
     public static int undoReEnforce(int territoryNum, int numArmies){
-        if(CreditMgr.undo(game)) {
+        if(undo()) {
             game.getTerritories().get(territoryNum).deleteArmy(numArmies);
             return 1;
         }
@@ -683,7 +683,7 @@ public class Risk  {
     }
 
     public static boolean undoAttack(territory t1, territory t2 ,int t1Deaths, int t2Deaths){
-        if(CreditMgr.undo(game)){
+        if(undo()){
             t1.addArmies(t1Deaths);
             t2.addArmies(t2Deaths);
             return true;
@@ -692,7 +692,7 @@ public class Risk  {
     }
 
     public static void undoFortify(int troops, int territory2Num, int territoryNum){
-        if(CreditMgr.undo(game)) {
+        if(undo()) {
             moveTroops(troops, game.territories.get(territory2Num), game.territories.get(territoryNum));
             printTerritories();
         }
@@ -791,5 +791,18 @@ public class Risk  {
         System.out.println("How much credit would like to send? "+CreditMgr.printCredit(game));
         int amount=sc.nextInt();
         CreditMgr.transferCredit(game, temp, amount);
+    }
+
+    public static boolean undo(){
+        Scanner sc = new Scanner(System.in);
+        if(game.currentPlayer().undos!=0){
+            System.out.println("Would you like to use your undo? (y/n)");
+            String answer=sc.nextLine();
+            if(answer.equals("y")) {
+                game.currentPlayer().useUndo();
+                return true;
+            }
+        }
+        return false;
     }
 }

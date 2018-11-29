@@ -58,26 +58,6 @@ public class CreditMgr {
     }
     public static String printCredit(Game game){return "(current credit: "+game.currentPlayer().wallet.credit+" )";}
 
-    public static boolean undo(Game game){
-        Scanner sc = new Scanner(System.in);
-        if(game.currentPlayer().undos!=0){
-            System.out.println("Would you like to use your undo? (y/n)");
-            String answer=sc.nextLine();
-            if(answer.equals("y")) {
-                game.currentPlayer().useUndo();
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-
-
-
-
-
-
 
     public static void buying(Game game, RiskBot myBot){
         myBot.sendMessage("Would you like to purchase credit? (y/n)");
