@@ -17,18 +17,6 @@ import java.util.TimerTask;
 public class Risk  {
     static Game game;
     static RiskBot myBot;
-
-    static TimerTask task = new TimerTask()
-    {
-        public void run()
-        {
-            if( game.input.equals("") )
-            {
-                timeOut();
-            }
-        }
-    };
-
     public static void main(String[] args) {
         try {
             Replay amazonS3 = new Replay();
@@ -636,39 +624,41 @@ public class Risk  {
 
     public static void check(){
         Scanner sc = new Scanner(System.in);
-        Timer timer = new Timer();
         if(game.stage==1){
-            //timer.schedule( task, 30*1000 );
+            Time timer=new Time(game);
+            timer.startTimer();
             System.out.println("\nDo you want to Renforce?");
             game.input=sc.nextLine();
-            //timer.cancel();
+            timer.cancelTimer();
             if(game.input.equals("y")) {
                 reEnforce();
             }
-            else{game.nextStage();}
+            else if(game.input.equals("n")){game.nextStage();}
             game.input="";
         }
         else if(game.stage==2) {
-            //timer.schedule( task, 30*1000 );
+            Time timer=new Time(game);
+            timer.startTimer();
             System.out.println("\nDo you want to Attack?");
             game.input=sc.nextLine();
-            //timer.cancel();
+            timer.cancelTimer();
             if(game.input.equals("y")) {
                 attack();
             }
-            else{game.nextStage();}
+            else if(game.input.equals("n")){game.nextStage();}
 
             game.input="";
         }
         else if(game.stage==3){
-            //timer.schedule( task, 30*1000 );
+            Time timer=new Time(game);
+            timer.startTimer();
             System.out.println("\nDo you want to Fortify?");
             game.input=sc.nextLine();
-            //timer.cancel();
+            timer.cancelTimer();
             if(game.input.equals("y")) {
                 fortify();
             }
-            else{game.nextStage();game.nextPlayer();}
+            else if(game.input.equals("n")){game.nextStage();game.nextPlayer();}
 
             game.input="";
         }
@@ -714,6 +704,7 @@ public class Risk  {
             int amount=sc.nextInt();
             CreditMgr.buyCredit(game.currentPlayer().wallet, amount);
         }
+        sc.nextLine();
 
         if(CreditMgr.checkCredit(game, 100)){
             System.out.println("Would you like to purchase any cards?(y/n)");
@@ -722,6 +713,7 @@ public class Risk  {
                 buyCard();
             }
         }
+
         if(CreditMgr.checkCredit(game, 100)){
             System.out.println("Would you like to purchase any undos?(y/n)");
             answer=sc.nextLine();
