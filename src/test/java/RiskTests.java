@@ -18,4 +18,16 @@ public class RiskTests {
         System.out.println(num);
         assertTrue(num == 0 || num == 1);
     }
+
+    @Test
+    public void printTerritoriesTest(){
+        territory t1 = new territory("t1","cont");
+        territory t2 = new territory("t2","cont");
+        Game game = new Game();
+        Risk risk = new Risk();
+        game.territories.add(t1);
+        game.territories.add(t2);
+        risk.game = game;
+        risk.printTerritories();
+    }
 }
