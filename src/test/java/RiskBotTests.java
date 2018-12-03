@@ -19,6 +19,12 @@ public class RiskBotTests {
         assertEquals(riskBot.getBotToken(), botTokenTest);
     }
 
+    @Test
+    public void getMessageTest(){
+        RiskBot rb= new RiskBot();
+        assertNull(rb.getMessage());
+    }
+
 //    @Test
 //    public void sendMessageTest(){
 //        RiskBot riskbot= new RiskBot();
