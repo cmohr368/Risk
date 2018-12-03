@@ -69,6 +69,7 @@ public class TerritoryTests {
     public void getContinentTest(){
         territory t1 = new territory("name","continent");
         assertTrue(t1.continent == "continent");
+        assertTrue(t1.getContinent() == t1.continent);
     }
 
     @Test
@@ -89,6 +90,12 @@ public class TerritoryTests {
         t1.addNeighbor(t3);
         assertTrue(t1.isNeighbor(t2));
 
+    }
+
+    @Test
+    public void defendTest(){
+        territory t1 = new territory("name","continent");
+        assertTrue(t1.attack(6).size() == 6);
     }
 
 
