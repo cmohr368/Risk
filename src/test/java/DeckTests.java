@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -21,5 +22,13 @@ public class DeckTests {
         } else {
             assertEquals(topCard, 3);
         }
+    }
+
+    @Test
+    public void setDeckTest(){
+        ArrayList <Integer>  deckTest= new ArrayList<>();
+        Deck deck= new Deck();
+        deck.setDeck(deckTest);
+        assertEquals(deckTest, deck.deck);
     }
 }
