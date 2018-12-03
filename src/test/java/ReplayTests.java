@@ -1,21 +1,23 @@
-// import static org.junit.jupiter.api.Assertions.*;
-// import org.junit.jupiter.api.Test;
+ import static org.junit.jupiter.api.Assertions.*;
+ import org.junit.jupiter.api.Test;
 
-// public class ReplayTests {
-//     String bucketNameTest= "test";
-//     String fileKeyTest= "test";
+ public class ReplayTests {
 
-//     @Test
-//     public void getBucketNameTest(){
-//         Replay replay= new Replay();
-//         replay.bucketName= bucketNameTest;
-//         assertEquals(replay.getBucketName(), bucketNameTest);
-//     }
 
-//     @Test
-//     public void getFileKeyTest(){
-//         Replay replay= new Replay();
-//         replay.fileKey= fileKeyTest;
-//         assertEquals(replay.getFileKey(), fileKeyTest);
-//     }
-// }
+    @Test
+     public void getBucketNameTest(){
+        Replay replay= new Replay();
+        String bucketNameTest = "test";
+        replay.bucketName= bucketNameTest;
+        assertEquals(replay.getBucketName(), bucketNameTest);
+     }
+
+     @Test
+     public void getFileKeyTest(){
+         Replay replay= new Replay();
+         String fileKeyTest = "test";
+         replay.fileKey= fileKeyTest;
+        assertEquals(replay.getFileKey(), fileKeyTest);
+     }
+
+  }

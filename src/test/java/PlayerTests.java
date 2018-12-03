@@ -31,16 +31,46 @@ public class PlayerTests {
     public void addTerritoryTest(){
         Player p1 = new Player("Name",5);
         territory t1 = new territory("Name", "North America");
+        territory t2 = new territory("Name", "Europe");
+        territory t3 = new territory("Name", "South America");
+        territory t4 = new territory("Name", "Australia");
+        territory t5 = new territory("Name", "Africa");
+        territory t6 = new territory("Name", "Asia");
         p1.addTerritory(t1);
+        p1.addTerritory(t2);
+        p1.addTerritory(t3);
+        p1.addTerritory(t4);
+        p1.addTerritory(t5);
+        p1.addTerritory(t6);
         assertTrue(p1.northCount == 1);
+        assertTrue(p1.europeCount == 1);
+        assertTrue(p1.africaCount == 1);
+        assertTrue(p1.southCount == 1);
+        assertTrue(p1.australiaCount == 1);
+        assertTrue(p1.asiaCount == 1);
     }
 
     @Test
     public void looseTerritoryTest(){
         Player p1 = new Player("Name",5);
         territory t1 = new territory("Name", "North America");
+        territory t2 = new territory("Name", "Europe");
+        territory t3 = new territory("Name", "South America");
+        territory t4 = new territory("Name", "Australia");
+        territory t5 = new territory("Name", "Africa");
+        territory t6 = new territory("Name", "Asia");
         p1.looseTerritory(t1);
+        p1.looseTerritory(t2);
+        p1.looseTerritory(t3);
+        p1.looseTerritory(t4);
+        p1.looseTerritory(t5);
+        p1.looseTerritory(t6);
         assertTrue(p1.northCount == -1);
+        assertTrue(p1.europeCount == -1);
+        assertTrue(p1.africaCount == -1);
+        assertTrue(p1.southCount == -1);
+        assertTrue(p1.australiaCount == -1);
+        assertTrue(p1.asiaCount == -1);
     }
 
     @Test
