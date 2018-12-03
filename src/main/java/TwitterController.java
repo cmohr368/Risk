@@ -24,7 +24,7 @@ public class TwitterController {
     TwitterController()
     {
         try {
-            input = new FileInputStream("src/main/secret_FruitCakes.properties");
+            input = new FileInputStream("src/main/java/secret_FruitCakes.properties");
             properties.load(input);
 
             authroization.put("Access Token",properties.getProperty("twitter.accessToken"));
