@@ -7,7 +7,7 @@ install: true
 
 script:
 - mvn -f pom.xml test
- "mvn cobertura:cobertura"
+- mvn -f pom.xml cobertura:cobertura
 
 after_success:
 - bash <(curl -s https://codecov.io/bash) -t e7ee571a-297d-4ee5-8815-1c0d468437d4
