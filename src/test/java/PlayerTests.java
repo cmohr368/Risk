@@ -29,12 +29,18 @@ public class PlayerTests {
 
     @Test
     public void addTerritoryTest(){
-
+        Player p1 = new Player("Name",5);
+        territory t1 = new territory("Name", "North America");
+        p1.addTerritory(t1);
+        assertTrue(p1.northCount == 1);
     }
 
     @Test
     public void looseTerritoryTest(){
-
+        Player p1 = new Player("Name",5);
+        territory t1 = new territory("Name", "North America");
+        p1.looseTerritory(t1);
+        assertTrue(p1.northCount == -1);
     }
 
     @Test
