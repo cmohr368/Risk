@@ -91,4 +91,24 @@ public class PlayerTests {
 //        assertEquals(player.artilleryCount, totalArtillery- 3);
         assertEquals(player.cavalryCount, totalArtillery- 3);
     }
+
+    @Test
+    public void addUndosTest(){
+        String test= "test";
+        int b= 0;
+        Player player= new Player(test, b);
+        player.undos= 5;
+        player.addUndos(1);
+        assertEquals(player.undos, 6);
+    }
+
+    @Test
+    public void useUndoTest(){
+        String test= "test";
+        int b= 0;
+        Player player= new Player(test, b);
+        player.undos= 5;
+        player.useUndo();
+        assertEquals(player.undos, 4);
+    }
 }
