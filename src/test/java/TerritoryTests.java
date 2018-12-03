@@ -95,7 +95,7 @@ public class TerritoryTests {
     @Test
     public void defendTest(){
         territory t1 = new territory("name","continent");
-        assertTrue(t1.attack(6).size() == 6);
+        assertTrue(t1.defend(6).size() == 6);
     }
 
 
